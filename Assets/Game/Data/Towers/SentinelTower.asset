@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fd6a48ae46145d3bb54b1cdf0f0331, type: 3}
+  m_Name: SentinelTower
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
+  towerName: Sentinel
+  icon: {fileID: 0}
+  highlightColor: {r: 0.35039157, g: 0.44375563, b: 0.5849056, a: 1}
+  towerPrefab: {fileID: 3965421486017390489, guid: 2ddf7a823f5d5474e9db8d43bf0205c5, type: 3}
+  buildCost: 75
+  range: 3
+  fireRate: 1.2
+  damage: 25

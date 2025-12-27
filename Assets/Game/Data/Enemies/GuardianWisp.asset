@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a7ddf2da7544d4e8e0f44fc12e7ded, type: 3}
+  m_Name: GuardianWisp
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.EnemyDefinition
+  enemyName: Wisp
+  portrait: {fileID: 0}
+  factionColor: {r: 0, g: 1, b: 1, a: 1}
+  prefab: {fileID: 3002126579560956931, guid: 685f4c77ed62341faa1336b0718334ab, type: 3}
+  baseHealth: 100
+  moveSpeed: 1.5
+  goldReward: 10

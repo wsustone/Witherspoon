@@ -1,0 +1,41 @@
+# Unity-generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild*/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+UserSettings/
+Obj/
+
+Assets/TextMesh\ Pro/Examples\ &\ Extras/
+# Collaborate & Cache
+/[Oo]bj/
+/[Cc]ache/
+/[Aa]sset[Ss]tore/
+/[Pp]ackages/com.unity.asset-store*/
+
+# IDE files
+.vscode/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Crash reports
+sysinfo.txt
