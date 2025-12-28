@@ -33,6 +33,7 @@ namespace Witherspoon.Game.Data
         [SerializeField] private AttackStyle attackMode = AttackStyle.Projectile;
         [SerializeField] private Color attackColor = Color.white;
         [SerializeField] private float coneAngle = 40f;
+        [SerializeField] private float coneRotationOffset = 0f;
 
         public string TowerName => towerName;
         public Sprite Icon => icon;
@@ -48,5 +49,6 @@ namespace Witherspoon.Game.Data
         public AttackStyle AttackMode => attackMode;
         public Color AttackColor => attackColor;
         public float ConeAngle => coneAngle;
+        public float ConeRotationOffset => coneRotationOffset;
     }
 }

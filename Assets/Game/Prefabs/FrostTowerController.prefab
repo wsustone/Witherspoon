@@ -90,7 +90,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!1 &3965421486017390489
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &2689405851475894485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,4 +200,4 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   beamRenderer: {fileID: 0}
   coneRenderer: {fileID: 3643939147830698579}
-  fxDuration: 0.25
+  fxDuration: 0.12

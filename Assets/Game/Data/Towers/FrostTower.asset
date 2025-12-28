@@ -25,4 +25,4 @@ MonoBehaviour:
   hitsInstantly: 0
   attackMode: 2
   attackColor: {r: 0.12691349, g: 0.6748756, b: 0.8679245, a: 1}
-  coneAngle: 40
+  coneAngle: 0.6

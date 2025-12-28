@@ -104,10 +104,16 @@ namespace Witherspoon.Game.Towers
 
         private void OnDrawGizmosSelected()
         {
-            if (definition == null) return;
+            if (coneRenderer == null)
+            {
+                Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
+                Vector3 origin = firePoint != null ? firePoint.position : transform.position;
+                Gizmos.DrawWireSphere(origin, definition.Range);
+                return;
+            }
+
             Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
-            Vector3 origin = firePoint != null ? firePoint.position : transform.position;
-            Gizmos.DrawWireSphere(origin, definition.Range);
+            Gizmos.DrawWireSphere(coneRenderer.transform.position, definition.Range);
         }
 
         private System.Collections.IEnumerator FireBeamFx(EnemyAgent target)
@@ -131,10 +137,10 @@ namespace Witherspoon.Game.Towers
             coneRenderer.color = definition.AttackColor;
             Vector3 origin = firePoint != null ? firePoint.position : transform.position;
             Vector3 dir = (target.transform.position - origin).normalized;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             coneRenderer.transform.position = origin;
-            coneRenderer.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
-            coneRenderer.transform.localScale = new Vector3(definition.Range, definition.Range, 1f);
+            Quaternion facing = Quaternion.FromToRotation(Vector3.up, dir);
+            coneRenderer.transform.rotation = facing * Quaternion.Euler(0f, 0f, definition.ConeRotationOffset);
+            coneRenderer.transform.localScale = new Vector3(definition.ConeAngle, definition.Range, 1f);
             coneRenderer.enabled = true;
             yield return new WaitForSeconds(fxDuration);
             coneRenderer.enabled = false;
