@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Witherspoon.Game.Data;
 using Witherspoon.Game.Enemies;
@@ -12,10 +12,23 @@ namespace Witherspoon.Game.Towers
     {
         [SerializeField] private TowerDefinition definition;
         [SerializeField] private Transform firePoint;
-        [SerializeField] private LayerMask enemyLayer;
+        [SerializeField] private LineRenderer beamRenderer;
+        [SerializeField] private SpriteRenderer coneRenderer;
+        [SerializeField] private float fxDuration = 0.12f;
 
         private float _fireCooldown;
-        private readonly Collider2D[] _results = new Collider2D[16];
+
+        private void Start()
+        {
+            if (beamRenderer != null)
+            {
+                beamRenderer.enabled = false;
+            }
+            if (coneRenderer != null)
+            {
+                coneRenderer.enabled = false;
+            }
+        }
 
         private void Update()
         {
@@ -35,20 +48,18 @@ namespace Witherspoon.Game.Towers
         private EnemyAgent AcquireTarget()
         {
             Vector3 origin = firePoint != null ? firePoint.position : transform.position;
-            int hits = Physics2D.OverlapCircleNonAlloc(origin, definition.Range, _results, enemyLayer);
-            float closestDist = float.MaxValue;
+            float rangeSq = definition.Range * definition.Range;
             EnemyAgent best = null;
-            for (int i = 0; i < hits; i++)
+            float bestDist = float.MaxValue;
+
+            foreach (var enemy in EnemyAgent.ActiveAgents.ToList())
             {
-                var col = _results[i];
-                if (col != null && col.TryGetComponent(out EnemyAgent agent))
+                if (enemy == null) continue;
+                float dist = (enemy.transform.position - origin).sqrMagnitude;
+                if (dist <= rangeSq && dist < bestDist)
                 {
-                    float dist = Vector3.SqrMagnitude(agent.transform.position - origin);
-                    if (dist < closestDist)
-                    {
-                        closestDist = dist;
-                        best = agent;
-                    }
+                    bestDist = dist;
+                    best = enemy;
                 }
             }
 
@@ -57,8 +68,76 @@ namespace Witherspoon.Game.Towers
 
         private void Fire(EnemyAgent target)
         {
-            target.ApplyDamage(definition.Damage);
-            // TODO: spawn projectile or VFX hook
+            switch (definition.AttackMode)
+            {
+                case TowerDefinition.AttackStyle.Beam:
+                    target.ApplyDamage(definition.Damage);
+                    StartCoroutine(FireBeamFx(target));
+                    break;
+                case TowerDefinition.AttackStyle.Cone:
+                    target.ApplyDamage(definition.Damage);
+                    StartCoroutine(FireConeFx(target));
+                    break;
+                default:
+                    if (definition.ProjectilePrefab != null)
+                    {
+                        var projectile = Instantiate(definition.ProjectilePrefab,
+                            firePoint != null ? firePoint.position : transform.position,
+                            Quaternion.identity);
+                        if (projectile.TryGetComponent(out ProjectileBehaviour behaviour))
+                        {
+                            behaviour.Initialize(target, definition.Damage, definition.ProjectileSpeed, definition.AttackColor);
+                        }
+                        else
+                        {
+                            var pb = projectile.AddComponent<ProjectileBehaviour>();
+                            pb.Initialize(target, definition.Damage, definition.ProjectileSpeed, definition.AttackColor);
+                        }
+                    }
+                    else
+                    {
+                        target.ApplyDamage(definition.Damage);
+                    }
+                    break;
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (definition == null) return;
+            Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
+            Vector3 origin = firePoint != null ? firePoint.position : transform.position;
+            Gizmos.DrawWireSphere(origin, definition.Range);
+        }
+
+        private System.Collections.IEnumerator FireBeamFx(EnemyAgent target)
+        {
+            if (beamRenderer == null) yield break;
+
+            beamRenderer.startColor = definition.AttackColor;
+            beamRenderer.endColor = definition.AttackColor;
+            beamRenderer.positionCount = 2;
+            beamRenderer.SetPosition(0, firePoint != null ? firePoint.position : transform.position);
+            beamRenderer.SetPosition(1, target != null ? target.transform.position : beamRenderer.GetPosition(0));
+            beamRenderer.enabled = true;
+            yield return new WaitForSeconds(fxDuration);
+            beamRenderer.enabled = false;
+        }
+
+        private System.Collections.IEnumerator FireConeFx(EnemyAgent target)
+        {
+            if (coneRenderer == null || target == null) yield break;
+
+            coneRenderer.color = definition.AttackColor;
+            Vector3 origin = firePoint != null ? firePoint.position : transform.position;
+            Vector3 dir = (target.transform.position - origin).normalized;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            coneRenderer.transform.position = origin;
+            coneRenderer.transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
+            coneRenderer.transform.localScale = new Vector3(definition.Range, definition.Range, 1f);
+            coneRenderer.enabled = true;
+            yield return new WaitForSeconds(fxDuration);
+            coneRenderer.enabled = false;
         }
     }
 }

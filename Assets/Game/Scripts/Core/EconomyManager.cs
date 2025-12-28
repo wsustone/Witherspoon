@@ -1,4 +1,5 @@
 using UnityEngine;
+using Witherspoon.Game.Enemies;
 
 namespace Witherspoon.Game.Core
 {
@@ -7,7 +8,7 @@ namespace Witherspoon.Game.Core
     /// </summary>
     public class EconomyManager : MonoBehaviour
     {
-        [SerializeField] private int startingGold = 150;
+        [SerializeField] private int startingGold = 300;
         [SerializeField] private int goldPerWave = 50;
         [SerializeField] private float passiveIncomeInterval = 5f;
         [SerializeField] private int passiveIncomeAmount = 5;
@@ -16,6 +17,16 @@ namespace Witherspoon.Game.Core
         private float _incomeTimer;
 
         public System.Action<int> OnGoldChanged;
+
+        private void OnEnable()
+        {
+            EnemyAgent.OnAnyKilled += HandleEnemyKilled;
+        }
+
+        private void OnDisable()
+        {
+            EnemyAgent.OnAnyKilled -= HandleEnemyKilled;
+        }
 
         public void Initialize()
         {
@@ -51,6 +62,12 @@ namespace Witherspoon.Game.Core
         public void OnWaveCompleted()
         {
             AddGold(goldPerWave);
+        }
+
+        private void HandleEnemyKilled(EnemyAgent enemy)
+        {
+            if (enemy?.Definition == null) return;
+            AddGold(enemy.Definition.GoldReward);
         }
 
         private void BroadcastGold()

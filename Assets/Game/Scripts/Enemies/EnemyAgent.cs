@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Witherspoon.Game.Data;
 
@@ -8,6 +9,11 @@ namespace Witherspoon.Game.Enemies
     /// </summary>
     public class EnemyAgent : MonoBehaviour
     {
+        private static readonly HashSet<EnemyAgent> ActiveSet = new();
+        public static IReadOnlyCollection<EnemyAgent> ActiveAgents => ActiveSet;
+        public static System.Action<EnemyAgent> OnAnyKilled;
+        public static System.Action<EnemyAgent> OnAnyReachedGoal;
+
         [SerializeField] private EnemyDefinition definition;
 
         private float _health;
@@ -19,6 +25,16 @@ namespace Witherspoon.Game.Enemies
         public System.Action<EnemyAgent> OnKilled;
 
         public EnemyDefinition Definition => definition;
+
+        private void OnEnable()
+        {
+            ActiveSet.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            ActiveSet.Remove(this);
+        }
 
         public void Initialize(EnemyDefinition def, Vector3 goal, float spawnDelay)
         {
@@ -53,6 +69,7 @@ namespace Witherspoon.Game.Enemies
             if (distance < 0.05f)
             {
                 OnReachedGoal?.Invoke(this);
+                OnAnyReachedGoal?.Invoke(this);
                 Destroy(gameObject);
                 return;
             }
@@ -69,6 +86,7 @@ namespace Witherspoon.Game.Enemies
             if (_health <= 0f)
             {
                 OnKilled?.Invoke(this);
+                OnAnyKilled?.Invoke(this);
                 Destroy(gameObject);
             }
         }

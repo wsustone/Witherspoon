@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8fd6a48ae46145d3bb54b1cdf0f0331, type: 3}
-  m_Name: SentinelTower
+  m_Name: FrostTower
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
-  towerName: Sentinel
+  towerName: Frost
   icon: {fileID: 0}
-  highlightColor: {r: 0.059763268, g: 0.33397105, b: 0.745283, a: 1}
-  towerPrefab: {fileID: 3965421486017390489, guid: 2ddf7a823f5d5474e9db8d43bf0205c5, type: 3}
+  highlightColor: {r: 0.90048945, g: 0.8943129, b: 0.9339623, a: 1}
+  towerPrefab: {fileID: 3965421486017390489, guid: 76644c0bdfa5541aeb5fd5424c959e60, type: 3}
   buildCost: 75
   range: 3
   fireRate: 1.2
   damage: 25
-  projectilePrefab: {fileID: 7629835184654441996, guid: df1e03e29b9ae4007ab94511c0248505, type: 3}
+  projectilePrefab: {fileID: 0}
   projectileSpeed: 8
   hitsInstantly: 0
-  attackMode: 0
-  attackColor: {r: 1, g: 1, b: 1, a: 1}
+  attackMode: 2
+  attackColor: {r: 0.12691349, g: 0.6748756, b: 0.8679245, a: 1}
   coneAngle: 40

@@ -17,10 +17,19 @@ namespace Witherspoon.Game.Towers
 
         [Header("Build Options")]
         [SerializeField] private TowerDefinition defaultTower;
+        private TowerDefinition _currentTower;
 
         private void Reset()
         {
             worldCamera = Camera.main;
+        }
+
+        private void Start()
+        {
+            if (defaultTower != null)
+            {
+                SelectTower(defaultTower);
+            }
         }
 
         private void Update()
@@ -33,8 +42,15 @@ namespace Witherspoon.Game.Towers
 
         private void TryPlaceTowerAtCursor()
         {
-            if (gridManager == null || economyManager == null || defaultTower == null || defaultTower.TowerPrefab == null)
+            if (gridManager == null || economyManager == null)
             {
+                Debug.LogWarning("Placement failed: missing GridManager or EconomyManager.");
+                return;
+            }
+
+            if (_currentTower == null || _currentTower.TowerPrefab == null)
+            {
+                Debug.LogWarning("Placement failed: no tower selected or prefab missing.");
                 return;
             }
 
@@ -47,19 +63,27 @@ namespace Witherspoon.Game.Towers
             var cell = gridManager.WorldToGrid(worldPoint);
             if (!gridManager.IsCellFree(cell))
             {
+                Debug.Log("Placement blocked: cell already occupied or out of bounds.");
                 return;
             }
 
-            if (!economyManager.TrySpend(defaultTower.BuildCost))
+            if (!economyManager.TrySpend(_currentTower.BuildCost))
             {
+                Debug.Log("Placement failed: not enough gold.");
                 return;
             }
 
             Vector3 spawnPos = gridManager.GridToWorld(cell);
-            var tower = Instantiate(defaultTower.TowerPrefab, spawnPos, Quaternion.identity);
-            tower.name = $"{defaultTower.TowerName}_Tower";
+            var tower = Instantiate(_currentTower.TowerPrefab, spawnPos, Quaternion.identity);
+            tower.name = $"{_currentTower.TowerName}_Tower";
 
             gridManager.SetBlocked(cell, true);
+        }
+
+        public void SelectTower(TowerDefinition definition)
+        {
+            if (definition == null) return;
+            _currentTower = definition;
         }
     }
 }
