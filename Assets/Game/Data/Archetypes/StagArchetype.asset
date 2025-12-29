@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54959c27d5ac248f5888da9f3c547477, type: 3}
   m_Name: StagArchetype
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.GuardianArchetype
-  displayName: Stag
-  role: Support / Aura
-  loreSnippet: 
+  displayName: Stag Warden
+  role: Grove Ward / Aura Support
+  loreSnippet: Roots of twilight whisper through the stag, weaving protective slows that shelter allies.
   icon: {fileID: 0}
-  highlightColor: {r: 1, g: 1, b: 1, a: 1}
-  attackColor: {r: 1, g: 1, b: 1, a: 1}
-  attackStyle: 0
-  range: 3
-  fireRate: 1
-  damage: 25
-  projectileSpeed: 8
-  hitsInstantly: 0
-  projectileSpawnOffset: 0.35
-  coneAngle: 40
+  highlightColor: {r: 0.7137255, g: 0.8705883, b: 0.63529414, a: 1}
+  attackColor: {r: 0.3137255, g: 0.854902, b: 0.6117647, a: 0.8}
+  attackStyle: 3
+  range: 3.5
+  fireRate: 1.2
+  damage: 0
+  projectileSpeed: 0
+  hitsInstantly: 1
+  projectileSpawnOffset: 0
+  coneAngle: 120
   coneRotationOffset: 0
-  slowPercent: 0.1
-  effectDuration: 0.5
+  slowPercent: 0.35
+  effectDuration: 1.5
   synergyMorphs: []
