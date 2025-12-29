@@ -81,9 +81,17 @@ namespace Witherspoon.Game.Towers
                 default:
                     if (definition.ProjectilePrefab != null)
                     {
-                        var projectile = Instantiate(definition.ProjectilePrefab,
-                            firePoint != null ? firePoint.position : transform.position,
-                            Quaternion.identity);
+                        Vector3 spawnPos = firePoint != null ? firePoint.position : transform.position;
+                        if (target != null && definition.ProjectileSpawnOffset > 0f)
+                        {
+                            var toward = (target.transform.position - spawnPos).normalized;
+                            spawnPos += toward * definition.ProjectileSpawnOffset;
+                        }
+
+                        var projectile = Instantiate(definition.ProjectilePrefab, spawnPos, Quaternion.identity);
+#if UNITY_EDITOR
+                        Debug.Log($"[{definition.TowerName}] spawned projectile '{definition.ProjectilePrefab.name}' targeting {(target != null ? target.name : "null")}", this);
+#endif
                         if (projectile.TryGetComponent(out ProjectileBehaviour behaviour))
                         {
                             behaviour.Initialize(target, definition.Damage, definition.ProjectileSpeed, definition.AttackColor);

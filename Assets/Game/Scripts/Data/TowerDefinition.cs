@@ -28,6 +28,7 @@ namespace Witherspoon.Game.Data
         [SerializeField] private GameObject projectilePrefab;
         [SerializeField] private float projectileSpeed = 8f;
         [SerializeField] private bool hitsInstantly;
+        [SerializeField] private float projectileSpawnOffset = 0.35f;
 
         [Header("Attack Visual")]
         [SerializeField] private AttackStyle attackMode = AttackStyle.Projectile;
@@ -45,6 +46,7 @@ namespace Witherspoon.Game.Data
         public float Damage => damage;
         public GameObject ProjectilePrefab => projectilePrefab;
         public float ProjectileSpeed => projectileSpeed;
+        public float ProjectileSpawnOffset => projectileSpawnOffset;
         public bool HitsInstantly => hitsInstantly;
         public AttackStyle AttackMode => attackMode;
         public Color AttackColor => attackColor;

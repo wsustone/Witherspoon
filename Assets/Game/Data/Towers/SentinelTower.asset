@@ -20,9 +20,11 @@ MonoBehaviour:
   range: 3
   fireRate: 1.2
   damage: 25
-  projectilePrefab: {fileID: 7629835184654441996, guid: df1e03e29b9ae4007ab94511c0248505, type: 3}
-  projectileSpeed: 8
+  projectilePrefab: {fileID: 8296764524300265392, guid: b53c0cdf5939043e69d0224d93283f2d, type: 3}
+  projectileSpeed: 12
   hitsInstantly: 0
+  projectileSpawnOffset: 0
   attackMode: 0
-  attackColor: {r: 1, g: 1, b: 1, a: 1}
+  attackColor: {r: 0.9245283, g: 0.8609306, b: 0.5974546, a: 1}
   coneAngle: 40
+  coneRotationOffset: 0

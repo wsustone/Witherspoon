@@ -52,8 +52,12 @@ namespace Witherspoon.Game.Towers
                 return;
             }
 
-            transform.position += dir.normalized * distanceThisFrame;
-            transform.rotation = Quaternion.LookRotation(Vector3.forward, dir);
+            Vector3 step = dir.normalized * distanceThisFrame;
+            transform.position += step;
+
+            // Keep 2D sprites facing camera while rotating only around Z.
+            float angle = Mathf.Atan2(step.y, step.x) * Mathf.Rad2Deg - 90f;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
 
         private void HitTarget()
