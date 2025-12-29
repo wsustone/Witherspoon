@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54959c27d5ac248f5888da9f3c547477, type: 3}
+  m_Name: SerpentArchetype
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.GuardianArchetype
+  displayName: Serpent Oracle
+  role: Venom Torrent Beam
+  loreSnippet: 
+  icon: {fileID: 0}
+  highlightColor: {r: 0.7830189, g: 0.33610716, b: 0.601055, a: 1}
+  attackColor: {r: 1, g: 1, b: 1, a: 1}
+  attackStyle: 1
+  range: 3
+  fireRate: 1
+  damage: 25
+  projectileSpeed: 8
+  hitsInstantly: 0
+  projectileSpawnOffset: 0.35
+  coneAngle: 40
+  coneRotationOffset: 0
+  synergyMorphs: []

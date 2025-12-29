@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fd6a48ae46145d3bb54b1cdf0f0331, type: 3}
+  m_Name: WolfTower
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
+  archetype: {fileID: 11400000, guid: c889124013a6f40d18f2a7ec8cdef549, type: 2}
+  towerName: Wolf
+  icon: {fileID: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 1}
+  towerPrefab: {fileID: 3965421486017390489, guid: 2ddf7a823f5d5474e9db8d43bf0205c5, type: 3}
+  buildCost: 75
+  range: 3
+  fireRate: 1.2
+  damage: 25
+  projectilePrefab: {fileID: 8296764524300265392, guid: b53c0cdf5939043e69d0224d93283f2d, type: 3}
+  projectileSpeed: 12
+  hitsInstantly: 0
+  projectileSpawnOffset: 0
+  attackMode: 0
+  attackColor: {r: 0.9245283, g: 0.8609306, b: 0.5974546, a: 1}
+  coneAngle: 40
+  coneRotationOffset: 0
+  slowPercent: 0.1
+  effectDuration: 0.5

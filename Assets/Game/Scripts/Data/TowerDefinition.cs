@@ -9,8 +9,13 @@ namespace Witherspoon.Game.Data
         {
             Projectile,
             Beam,
-            Cone
+            Cone,
+            Aura,
+            Wall
         }
+
+        [Header("Archetype Link")]
+        [SerializeField] private GuardianArchetype archetype;
 
         [Header("Presentation")]
         [SerializeField] private string towerName = "Sentinel";
@@ -35,22 +40,29 @@ namespace Witherspoon.Game.Data
         [SerializeField] private Color attackColor = Color.white;
         [SerializeField] private float coneAngle = 40f;
         [SerializeField] private float coneRotationOffset = 0f;
+        [Header("Status Effects")]
+        [Range(0f, 1f)]
+        [SerializeField] private float slowPercent = 0.1f;
+        [SerializeField] private float effectDuration = 0.5f;
 
-        public string TowerName => towerName;
-        public Sprite Icon => icon;
-        public Color HighlightColor => highlightColor;
+        public GuardianArchetype Archetype => archetype;
+        public string TowerName => archetype != null ? archetype.DisplayName : towerName;
+        public Sprite Icon => icon != null ? icon : archetype?.Icon;
+        public Color HighlightColor => archetype != null ? archetype.HighlightColor : highlightColor;
         public GameObject TowerPrefab => towerPrefab;
         public int BuildCost => buildCost;
-        public float Range => range;
-        public float FireRate => fireRate;
-        public float Damage => damage;
+        public float Range => archetype != null ? archetype.Range : range;
+        public float FireRate => archetype != null ? archetype.FireRate : fireRate;
+        public float Damage => archetype != null ? archetype.Damage : damage;
         public GameObject ProjectilePrefab => projectilePrefab;
-        public float ProjectileSpeed => projectileSpeed;
-        public float ProjectileSpawnOffset => projectileSpawnOffset;
-        public bool HitsInstantly => hitsInstantly;
-        public AttackStyle AttackMode => attackMode;
-        public Color AttackColor => attackColor;
-        public float ConeAngle => coneAngle;
-        public float ConeRotationOffset => coneRotationOffset;
+        public float ProjectileSpeed => archetype != null ? archetype.ProjectileSpeed : projectileSpeed;
+        public float ProjectileSpawnOffset => archetype != null ? archetype.ProjectileSpawnOffset : projectileSpawnOffset;
+        public bool HitsInstantly => archetype != null ? archetype.HitsInstantly : hitsInstantly;
+        public AttackStyle AttackMode => archetype != null ? archetype.AttackStyle : attackMode;
+        public Color AttackColor => archetype != null ? archetype.AttackColor : attackColor;
+        public float ConeAngle => archetype != null ? archetype.ConeAngle : coneAngle;
+        public float ConeRotationOffset => archetype != null ? archetype.ConeRotationOffset : coneRotationOffset;
+        public float SlowPercent => archetype != null ? archetype.SlowPercent : slowPercent;
+        public float EffectDuration => archetype != null ? archetype.EffectDuration : effectDuration;
     }
 }

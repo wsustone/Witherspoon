@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fd6a48ae46145d3bb54b1cdf0f0331, type: 3}
+  m_Name: BearTower
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
+  archetype: {fileID: 11400000, guid: bccdd4bb07f0e496f8ef2012267e6c6e, type: 2}
+  towerName: Bear
+  icon: {fileID: 0}
+  highlightColor: {r: 0, g: 0, b: 0, a: 1}
+  towerPrefab: {fileID: 3965421486017390489, guid: 2c735831d88624f42a0859429660a07e, type: 3}
+  buildCost: 75
+  range: 3
+  fireRate: 1.2
+  damage: 25
+  projectilePrefab: {fileID: 4565871752660877771, guid: 02f3496cf6bdc4b1d987945ed62569f3, type: 3}
+  projectileSpeed: 8
+  hitsInstantly: 0
+  projectileSpawnOffset: 0.35
+  attackMode: 4
+  attackColor: {r: 0.085039176, g: 0.15888664, b: 0.46226418, a: 1}
+  coneAngle: 40
+  coneRotationOffset: 0
+  slowPercent: 0.1
+  effectDuration: 0.5

@@ -20,6 +20,8 @@ namespace Witherspoon.Game.Enemies
         private Vector3 _goal;
         private float _spawnDelay;
         private bool _active;
+        private float _slowMultiplier = 1f;
+        private float _slowTimer;
 
         public System.Action<EnemyAgent> OnReachedGoal;
         public System.Action<EnemyAgent> OnKilled;
@@ -58,6 +60,7 @@ namespace Witherspoon.Game.Enemies
                 else return;
             }
 
+            TickSlow();
             MoveTowardsGoal();
         }
 
@@ -75,7 +78,8 @@ namespace Witherspoon.Game.Enemies
             }
 
             direction.Normalize();
-            transform.position += direction * (definition.MoveSpeed * Time.deltaTime);
+            float effectiveSpeed = definition.MoveSpeed * _slowMultiplier;
+            transform.position += direction * (effectiveSpeed * Time.deltaTime);
             var pos = transform.position;
             transform.position = new Vector3(pos.x, pos.y, 0f);
         }
@@ -89,6 +93,35 @@ namespace Witherspoon.Game.Enemies
                 OnAnyKilled?.Invoke(this);
                 Destroy(gameObject);
             }
+        }
+
+        private void TickSlow()
+        {
+            if (_slowTimer <= 0f)
+            {
+                _slowMultiplier = 1f;
+                return;
+            }
+
+            _slowTimer -= Time.deltaTime;
+            if (_slowTimer <= 0f)
+            {
+                _slowMultiplier = 1f;
+                _slowTimer = 0f;
+            }
+        }
+
+        public void ApplySlow(float slowPercent, float duration)
+        {
+            float clampedPercent = Mathf.Clamp01(slowPercent);
+            float candidateMultiplier = 1f - clampedPercent;
+
+            if (candidateMultiplier < _slowMultiplier)
+            {
+                _slowMultiplier = candidateMultiplier;
+            }
+
+            _slowTimer = Mathf.Max(_slowTimer, duration);
         }
     }
 }
