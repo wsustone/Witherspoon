@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54959c27d5ac248f5888da9f3c547477, type: 3}
   m_Name: WolfArchetype
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.GuardianArchetype
-  displayName: Wolf Sentinel
+  displayName: Wolf
   role: Multi-hit DPS
   loreSnippet: 
   icon: {fileID: 0}

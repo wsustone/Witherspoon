@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54959c27d5ac248f5888da9f3c547477, type: 3}
   m_Name: BearArchetype
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.GuardianArchetype
-  displayName: Bear Bastion
+  displayName: Bear
   role: Wall / Taunt / Aura
   loreSnippet: 
   icon: {fileID: 0}
@@ -28,5 +28,5 @@ MonoBehaviour:
   coneAngle: 40
   coneRotationOffset: 0
   slowPercent: 0.35
-  effectDuration: 0.15
+  effectDuration: 0.5
   synergyMorphs: []

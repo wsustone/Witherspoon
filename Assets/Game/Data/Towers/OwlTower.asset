@@ -13,7 +13,22 @@ MonoBehaviour:
   m_Name: OwlTower
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
   archetype: {fileID: 11400000, guid: 7b61887360f554078b1fb34c7564757b, type: 2}
-  towerName: Frost
+  overrideTowerName: 0
+  overrideIcon: 0
+  overrideHighlightColor: 0
+  overrideAttackColor: 0
+  overrideRange: 0
+  overrideFireRate: 0
+  overrideDamage: 0
+  overrideProjectileSpeed: 0
+  overrideHitsInstantly: 0
+  overrideProjectileSpawnOffset: 0
+  overrideAttackMode: 0
+  overrideConeAngle: 0
+  overrideConeRotationOffset: 0
+  overrideSlowPercent: 0
+  overrideEffectDuration: 0
+  towerName: Owl
   icon: {fileID: 0}
   highlightColor: {r: 0, g: 0, b: 0, a: 1}
   towerPrefab: {fileID: 3965421486017390489, guid: 76644c0bdfa5541aeb5fd5424c959e60, type: 3}

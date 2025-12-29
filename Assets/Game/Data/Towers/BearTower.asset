@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: BearTower
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
   archetype: {fileID: 11400000, guid: bccdd4bb07f0e496f8ef2012267e6c6e, type: 2}
+  overrideTowerName: 0
+  overrideIcon: 0
+  overrideHighlightColor: 0
+  overrideAttackColor: 0
+  overrideRange: 0
+  overrideFireRate: 0
+  overrideDamage: 0
+  overrideProjectileSpeed: 0
+  overrideHitsInstantly: 0
+  overrideProjectileSpawnOffset: 0
+  overrideAttackMode: 0
+  overrideConeAngle: 0
+  overrideConeRotationOffset: 0
+  overrideSlowPercent: 0
+  overrideEffectDuration: 0
   towerName: Bear
   icon: {fileID: 0}
   highlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -24,10 +39,10 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4565871752660877771, guid: 02f3496cf6bdc4b1d987945ed62569f3, type: 3}
   projectileSpeed: 8
   hitsInstantly: 0
-  projectileSpawnOffset: 0.35
+  projectileSpawnOffset: 0
   attackMode: 4
   attackColor: {r: 0.085039176, g: 0.15888664, b: 0.46226418, a: 1}
   coneAngle: 40
   coneRotationOffset: 0
-  slowPercent: 0.1
+  slowPercent: 0.246
   effectDuration: 0.5

@@ -17,14 +17,14 @@ MonoBehaviour:
   loreSnippet: 
   icon: {fileID: 0}
   highlightColor: {r: 0.7830189, g: 0.33610716, b: 0.601055, a: 1}
-  attackColor: {r: 1, g: 1, b: 1, a: 1}
+  attackColor: {r: 0.8867924, g: 0.037646834, b: 0.037646834, a: 1}
   attackStyle: 1
   range: 3
-  fireRate: 1
-  damage: 25
-  projectileSpeed: 8
-  hitsInstantly: 0
-  projectileSpawnOffset: 0.35
+  fireRate: 1.2
+  damage: 30
+  projectileSpeed: 10
+  hitsInstantly: 1
+  projectileSpawnOffset: 0
   coneAngle: 40
   coneRotationOffset: 0
   synergyMorphs: []
