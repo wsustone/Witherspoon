@@ -9,13 +9,15 @@ namespace Witherspoon.Game.Towers
         private float _damage;
         private float _speed;
         private Color _color = Color.white;
+        private TowerController _source;
 
-        public void Initialize(EnemyAgent target, float damage, float speed, Color color)
+        public void Initialize(EnemyAgent target, float damage, float speed, Color color, TowerController source)
         {
             _target = target;
             _damage = damage;
             _speed = speed;
             _color = color;
+            _source = source;
 
             ApplyColor();
         }
@@ -64,7 +66,7 @@ namespace Witherspoon.Game.Towers
         {
             if (_target != null)
             {
-                _target.ApplyDamage(_damage);
+                _target.ApplyDamage(_damage, _source);
             }
 
             Destroy(gameObject);

@@ -17,6 +17,7 @@ namespace Witherspoon.Game.Core
         private float _incomeTimer;
 
         public System.Action<int> OnGoldChanged;
+        public int CurrentGold => _currentGold;
 
         private void OnEnable()
         {

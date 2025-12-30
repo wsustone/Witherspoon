@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54959c27d5ac248f5888da9f3c547477, type: 3}
   m_Name: StagArchetype
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.GuardianArchetype
-  displayName: Stag Warden
+  displayName: Stag
   role: Grove Ward / Aura Support
-  loreSnippet: Roots of twilight whisper through the stag, weaving protective slows that shelter allies.
+  loreSnippet: Roots of twilight whisper through the stag, weaving protective slows
+    that shelter allies.
   icon: {fileID: 0}
   highlightColor: {r: 0.7137255, g: 0.8705883, b: 0.63529414, a: 1}
   attackColor: {r: 0.3137255, g: 0.854902, b: 0.6117647, a: 0.8}

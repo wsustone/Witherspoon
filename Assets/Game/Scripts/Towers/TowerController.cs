@@ -22,14 +22,30 @@ namespace Witherspoon.Game.Towers
         [SerializeField] private float placeholderHeight = 1.6f;
         [SerializeField] private float placeholderGlowHeight = 0.35f;
 
+        [Header("Upgrades")]
+        [SerializeField] private AnimationCurve upgradeRangeSmoothing = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+
         private static readonly HashSet<TowerController> ActiveSet = new();
         public static IReadOnlyCollection<TowerController> ActiveTowers => ActiveSet;
 
         private float _fireCooldown;
         private int _kills;
+        private int _upgradeTier;
+        private float _upgradeTimer;
+        private bool _isUpgrading;
+        private float _currentRange;
+        private float _currentFireRate;
+        private float _currentDamage;
 
         public TowerDefinition Definition => definition;
         public int KillCount => _kills;
+        public int UpgradeTier => _upgradeTier;
+        public bool IsUpgrading => _isUpgrading;
+        public float UpgradeTimer => _upgradeTimer;
+        public float CurrentRange => _currentRange;
+        public float CurrentFireRate => _currentFireRate;
+        public float CurrentDamage => _currentDamage;
+        public TowerDefinition.TowerUpgradeTier NextTier => definition != null && definition.UpgradeTiers != null && _upgradeTier < definition.UpgradeTiers.Length ? definition.UpgradeTiers[_upgradeTier] : null;
 
         private void Start()
         {
@@ -41,6 +57,8 @@ namespace Witherspoon.Game.Towers
             {
                 coneRenderer.enabled = false;
             }
+
+            CacheBaseStats();
 
             if (usePlaceholderMesh)
             {
@@ -61,6 +79,15 @@ namespace Witherspoon.Game.Towers
         private void Update()
         {
             if (definition == null) return;
+            if (_isUpgrading)
+            {
+                _upgradeTimer -= Time.deltaTime;
+                if (_upgradeTimer <= 0f)
+                {
+                    CompleteUpgrade();
+                }
+                return;
+            }
 
             _fireCooldown -= Time.deltaTime;
             if (_fireCooldown > 0f) return;
@@ -76,7 +103,7 @@ namespace Witherspoon.Game.Towers
         private EnemyAgent AcquireTarget()
         {
             Vector3 origin = firePoint != null ? firePoint.position : transform.position;
-            float rangeSq = definition.Range * definition.Range;
+            float rangeSq = _currentRange * _currentRange;
             EnemyAgent best = null;
             float bestDist = float.MaxValue;
 
@@ -99,11 +126,11 @@ namespace Witherspoon.Game.Towers
             switch (definition.AttackMode)
             {
                 case TowerDefinition.AttackStyle.Beam:
-                    target.ApplyDamage(definition.Damage, this);
+                    target.ApplyDamage(_currentDamage, this);
                     StartCoroutine(FireBeamFx(target));
                     break;
                 case TowerDefinition.AttackStyle.Cone:
-                    target.ApplyDamage(definition.Damage, this);
+                    target.ApplyDamage(_currentDamage, this);
                     StartCoroutine(FireConeFx(target));
                     break;
                 case TowerDefinition.AttackStyle.Aura:
@@ -131,17 +158,17 @@ namespace Witherspoon.Game.Towers
 #endif
                         if (projectile.TryGetComponent(out ProjectileBehaviour behaviour))
                         {
-                            behaviour.Initialize(target, definition.Damage, definition.ProjectileSpeed, definition.AttackColor);
+                            behaviour.Initialize(target, _currentDamage, definition.ProjectileSpeed, definition.AttackColor, this);
                         }
                         else
                         {
                             var pb = projectile.AddComponent<ProjectileBehaviour>();
-                            pb.Initialize(target, definition.Damage, definition.ProjectileSpeed, definition.AttackColor);
+                            pb.Initialize(target, _currentDamage, definition.ProjectileSpeed, definition.AttackColor, this);
                         }
                     }
                     else
                     {
-                        target.ApplyDamage(definition.Damage, this);
+                        target.ApplyDamage(_currentDamage, this);
                     }
                     break;
             }
@@ -153,12 +180,12 @@ namespace Witherspoon.Game.Towers
             {
                 Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
                 Vector3 origin = firePoint != null ? firePoint.position : transform.position;
-                Gizmos.DrawWireSphere(origin, definition.Range);
+                Gizmos.DrawWireSphere(origin, _currentRange);
                 return;
             }
 
             Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
-            Gizmos.DrawWireSphere(coneRenderer.transform.position, definition.Range);
+            Gizmos.DrawWireSphere(coneRenderer.transform.position, _currentRange);
         }
 
         private Coroutine _auraRoutine;
@@ -295,7 +322,7 @@ namespace Witherspoon.Game.Towers
             var existingMesh = GetComponentInChildren<MeshRenderer>();
             if (existingMesh != null) return;
 
-            Color bodyColor = definition != null ? definition.HighlightColor : new Color(0.6f, 0.8f, 1f);
+            Color color = definition != null ? definition.HighlightColor : new Color(0.2f, 0.9f, 1f, 0.7f);
             Color glowColor = definition != null ? definition.AttackColor : new Color(1f, 0.85f, 0.35f);
 
             var body = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -304,7 +331,7 @@ namespace Witherspoon.Game.Towers
             body.transform.localScale = new Vector3(placeholderRadius, placeholderHeight * 0.5f, placeholderRadius);
             body.transform.localPosition = new Vector3(0f, 0f, placeholderHeight * 0.5f);
             body.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-            ApplyMaterial(body, bodyColor);
+            ApplyMaterial(body, color);
 
             var glow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             glow.name = "TowerFocus3D";
@@ -342,6 +369,71 @@ namespace Witherspoon.Game.Towers
             if (target.TryGetComponent<Collider>(out var collider))
             {
                 Destroy(collider);
+            }
+        }
+
+        private void CacheBaseStats()
+        {
+            if (definition == null)
+            {
+                _currentRange = 3f;
+                _currentFireRate = 1f;
+                _currentDamage = 10f;
+                return;
+            }
+
+            _currentRange = definition.Range;
+            _currentFireRate = definition.FireRate;
+            _currentDamage = definition.Damage;
+        }
+
+        public bool CanUpgrade()
+        {
+            if (definition == null || definition.UpgradeTiers == null) return false;
+            if (_upgradeTier >= definition.UpgradeTiers.Length) return false;
+            return !_isUpgrading;
+        }
+
+        public int GetUpgradeCost()
+        {
+            var tier = NextTier;
+            return tier != null ? tier.Cost : int.MaxValue;
+        }
+
+        public float GetUpgradeDuration()
+        {
+            var tier = NextTier;
+            return tier != null ? tier.UpgradeTime : 0f;
+        }
+
+        public void BeginUpgrade()
+        {
+            if (!CanUpgrade()) return;
+            var tier = NextTier;
+            if (tier == null) return;
+
+            _isUpgrading = true;
+            _upgradeTimer = tier.UpgradeTime;
+        }
+
+        private void CompleteUpgrade()
+        {
+            _isUpgrading = false;
+            _upgradeTier++;
+            ApplyUpgradeStats();
+        }
+
+        private void ApplyUpgradeStats()
+        {
+            CacheBaseStats();
+            if (definition?.UpgradeTiers == null) return;
+
+            for (int i = 0; i < _upgradeTier && i < definition.UpgradeTiers.Length; i++)
+            {
+                var tier = definition.UpgradeTiers[i];
+                _currentRange *= tier.RangeMultiplier;
+                _currentFireRate *= tier.FireRateMultiplier;
+                _currentDamage *= tier.DamageMultiplier;
             }
         }
     }

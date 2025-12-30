@@ -5,6 +5,26 @@ namespace Witherspoon.Game.Data
     [CreateAssetMenu(menuName = "Witherspoon/Tower Definition", fileName = "TowerDefinition")]
     public class TowerDefinition : ScriptableObject
     {
+        [System.Serializable]
+        public class TowerUpgradeTier
+        {
+            [SerializeField] private string tierName = "Empowered";
+            [SerializeField] private int cost = 100;
+            [SerializeField] private float rangeMultiplier = 1.1f;
+            [SerializeField] private float fireRateMultiplier = 1.15f;
+            [SerializeField] private float damageMultiplier = 1.25f;
+            [SerializeField] private float slowMultiplier = 1f;
+            [SerializeField] private float upgradeTime = 2.5f;
+
+            public string TierName => tierName;
+            public int Cost => cost;
+            public float RangeMultiplier => rangeMultiplier;
+            public float FireRateMultiplier => fireRateMultiplier;
+            public float DamageMultiplier => damageMultiplier;
+            public float SlowMultiplier => slowMultiplier;
+            public float UpgradeTime => Mathf.Max(0f, upgradeTime);
+        }
+
         public enum AttackStyle
         {
             Projectile,
@@ -45,6 +65,7 @@ namespace Witherspoon.Game.Data
         [SerializeField] private float range = 3f;
         [SerializeField] private float fireRate = 1.2f;
         [SerializeField] private float damage = 25f;
+        [SerializeField] private TowerUpgradeTier[] upgradeTiers = System.Array.Empty<TowerUpgradeTier>();
 
         [Header("Projectile")]
         [SerializeField] private GameObject projectilePrefab;
@@ -81,5 +102,6 @@ namespace Witherspoon.Game.Data
         public float ConeRotationOffset => (!overrideConeRotationOffset && archetype != null) ? archetype.ConeRotationOffset : coneRotationOffset;
         public float SlowPercent => (!overrideSlowPercent && archetype != null) ? archetype.SlowPercent : slowPercent;
         public float EffectDuration => (!overrideEffectDuration && archetype != null) ? archetype.EffectDuration : effectDuration;
+        public TowerUpgradeTier[] UpgradeTiers => upgradeTiers;
     }
 }
