@@ -248,9 +248,19 @@ namespace Witherspoon.Game.Towers
             var cameraToUse = worldCamera != null ? worldCamera : Camera.main;
             if (cameraToUse == null) return null;
 
-            Vector3 worldPoint = cameraToUse.ScreenToWorldPoint(Input.mousePosition);
-            worldPoint.z = 0f;
-            return worldPoint;
+            Ray ray = cameraToUse.ScreenPointToRay(Input.mousePosition);
+            Vector3 planePoint = gridManager != null ? gridManager.OriginPosition : Vector3.zero;
+            planePoint.z = 0f;
+            Plane plane = new Plane(Vector3.forward, planePoint);
+
+            if (plane.Raycast(ray, out float enter))
+            {
+                Vector3 hit = ray.GetPoint(enter);
+                hit.z = 0f;
+                return hit;
+            }
+
+            return null;
         }
 
         private Color GetGhostColor(bool buildable)

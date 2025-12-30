@@ -15,6 +15,7 @@ namespace Witherspoon.Game.UI
         [SerializeField] private TowerPlacementController placementController;
         [SerializeField] private SelectionPanel selectionPanel;
         [SerializeField] private KeyCode clearSelectionKey = KeyCode.Escape;
+        [SerializeField] private float boardPlaneZ = 0f;
 
         private TowerController _selectedTower;
         private EnemyAgent _selectedEnemy;
@@ -55,10 +56,8 @@ namespace Witherspoon.Game.UI
         {
             if (worldCamera == null) return;
 
-            Vector3 worldPoint = worldCamera.ScreenToWorldPoint(Input.mousePosition);
-            worldPoint.z = 0f;
-
-            if (TryHitWithPhysics(worldPoint, out TowerController tower, out EnemyAgent enemy))
+            Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
+            if (TryRaycastTargets(ray, out TowerController tower, out EnemyAgent enemy))
             {
                 if (tower != null)
                 {
@@ -73,8 +72,8 @@ namespace Witherspoon.Game.UI
                 }
             }
 
-            // Physics fallback: choose nearest logical entity.
-            if (TryFindNearest(worldPoint, out tower, out enemy))
+            Vector3? worldPoint = ProjectRayToBoard(ray);
+            if (worldPoint.HasValue && TryFindNearest(worldPoint.Value, out tower, out enemy))
             {
                 if (tower != null)
                 {
@@ -115,49 +114,47 @@ namespace Witherspoon.Game.UI
             selectionPanel.Hide();
         }
 
-        private static bool TryHitWithPhysics(Vector3 point, out TowerController tower, out EnemyAgent enemy)
+        private bool TryRaycastTargets(Ray ray, out TowerController tower, out EnemyAgent enemy)
         {
             tower = null;
             enemy = null;
 
-            bool found = false;
-
-#if UNITY_2D
-            var hits2D = Physics2D.OverlapPointAll(point);
-            foreach (var hit in hits2D)
+            if (Physics.Raycast(ray, out var hit3D, 500f, ~0, QueryTriggerInteraction.Ignore))
             {
-                if (hit == null) continue;
-                if (tower == null && hit.TryGetComponent(out TowerController towerComp))
+                if (hit3D.collider != null)
                 {
-                    tower = towerComp;
-                    found = true;
-                }
-                if (enemy == null && hit.TryGetComponent(out EnemyAgent enemyComp))
-                {
-                    enemy = enemyComp;
-                    found = true;
-                }
-            }
-#endif
-
-            if (!found)
-            {
-                Ray ray = Camera.main != null ? Camera.main.ScreenPointToRay(Input.mousePosition) : new Ray(point, Vector3.forward);
-                if (Physics.Raycast(ray, out var hit3D, 100f))
-                {
-                    if (hit3D.collider != null)
+                    tower = hit3D.collider.GetComponentInParent<TowerController>();
+                    enemy = hit3D.collider.GetComponentInParent<EnemyAgent>();
+                    if (tower != null || enemy != null)
                     {
-                        tower = hit3D.collider.GetComponentInParent<TowerController>();
-                        enemy = hit3D.collider.GetComponentInParent<EnemyAgent>();
-                        if (tower != null || enemy != null)
-                        {
-                            found = true;
-                        }
+                        return true;
                     }
                 }
             }
 
-            return found;
+            Vector3? point = ProjectRayToBoard(ray);
+            if (point.HasValue)
+            {
+#if UNITY_2D
+                var hits2D = Physics2D.OverlapPointAll(point.Value);
+                foreach (var hit in hits2D)
+                {
+                    if (hit == null) continue;
+                    if (tower == null && hit.TryGetComponent(out TowerController towerComp))
+                    {
+                        tower = towerComp;
+                        return true;
+                    }
+                    if (enemy == null && hit.TryGetComponent(out EnemyAgent enemyComp))
+                    {
+                        enemy = enemyComp;
+                        return true;
+                    }
+                }
+#endif
+            }
+
+            return false;
         }
 
         private static bool TryFindNearest(Vector3 point, out TowerController tower, out EnemyAgent enemy)
@@ -178,6 +175,19 @@ namespace Witherspoon.Game.UI
             if (!enemyInRange) enemy = null;
 
             return tower != null || enemy != null;
+        }
+
+        private Vector3? ProjectRayToBoard(Ray ray)
+        {
+            Vector3 planePoint = new Vector3(0f, 0f, boardPlaneZ);
+            Plane plane = new Plane(Vector3.forward, planePoint);
+            if (plane.Raycast(ray, out float enter))
+            {
+                Vector3 hit = ray.GetPoint(enter);
+                hit.z = boardPlaneZ;
+                return hit;
+            }
+            return null;
         }
     }
 }

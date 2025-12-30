@@ -4,7 +4,7 @@ using Witherspoon.Game.Map;
 namespace Witherspoon.Game.Core
 {
     /// <summary>
-    /// Handles orthographic camera panning and zooming for the main playfield.
+    /// Handles perspective camera panning and zooming (distance) over the playfield.
     /// </summary>
     [RequireComponent(typeof(Camera))]
     public class CameraController2D : MonoBehaviour
@@ -13,21 +13,29 @@ namespace Witherspoon.Game.Core
         [SerializeField] private Camera targetCamera;
         [SerializeField] private GridManager grid;
 
+        [Header("Orientation")]
+        [SerializeField] private float yawDegrees = 35f;
+        [SerializeField] private float pitchDegrees = 55f;
+
         [Header("Pan")]
-        [SerializeField] private float panSpeed = 8f;
-        [SerializeField] private float dragPanSpeed = 0.35f;
+        [SerializeField] private float panSpeed = 18f;
+        [SerializeField] private float dragPanSpeed = 0.6f;
         [SerializeField] private KeyCode fastPanModifier = KeyCode.LeftShift;
-        [SerializeField] private float fastPanMultiplier = 1.8f;
+        [SerializeField] private float fastPanMultiplier = 1.6f;
 
-        [Header("Zoom")]
-        [SerializeField] private float zoomSpeed = 6f;
-        [SerializeField] private float minZoom = 4f;
-        [SerializeField] private float maxZoom = 14f;
-        [SerializeField] private float zoomLerpSpeed = 12f;
-        [SerializeField] private bool invertScroll = false;
+        [Header("Zoom (Distance)")]
+        [SerializeField] private float minDistance = 8f;
+        [SerializeField] private float maxDistance = 26f;
+        [SerializeField] private float zoomSpeed = 25f;
+        [SerializeField] private float zoomLerpSpeed = 10f;
+        [SerializeField] private bool invertScroll;
 
-        private Vector3 _targetPosition;
-        private float _targetZoom;
+        [Header("Smoothing")]
+        [SerializeField] private float positionLerp = 10f;
+
+        private Vector3 _focusPoint;
+        private float _targetDistance;
+        private Quaternion _targetRotation;
 
         private void Reset()
         {
@@ -41,8 +49,12 @@ namespace Witherspoon.Game.Core
                 targetCamera = GetComponent<Camera>();
             }
 
-            _targetPosition = targetCamera.transform.position;
-            _targetZoom = targetCamera.orthographicSize;
+            targetCamera.orthographic = false;
+
+            _targetRotation = Quaternion.Euler(pitchDegrees, yawDegrees, 0f);
+            _focusPoint = ResolveInitialFocus();
+            _targetDistance = Mathf.Clamp(Vector3.Distance(targetCamera.transform.position, _focusPoint), minDistance, maxDistance);
+            SnapTo(_focusPoint);
         }
 
         private void Update()
@@ -56,27 +68,26 @@ namespace Witherspoon.Game.Core
 
         private void HandlePanInput()
         {
-            Vector3 move = Vector3.zero;
-
             float modifier = Input.GetKey(fastPanModifier) ? fastPanMultiplier : 1f;
             float baseSpeed = panSpeed * modifier;
 
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-            if (Mathf.Abs(horizontal) > 0.01f || Mathf.Abs(vertical) > 0.01f)
+            Vector2 moveInput = new(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            if (moveInput.sqrMagnitude > 0.01f)
             {
-                move += new Vector3(horizontal, vertical, 0f).normalized * baseSpeed;
+                Vector3 planarRight = GetPlanarDirection(targetCamera.transform.right);
+                Vector3 planarForward = GetPlanarDirection(targetCamera.transform.forward);
+                Vector3 desired = (planarRight * moveInput.x + planarForward * moveInput.y).normalized;
+                _focusPoint += desired * baseSpeed * Time.unscaledDeltaTime;
             }
 
             if (Input.GetMouseButton(2))
             {
-                float dragX = -Input.GetAxis("Mouse X") * dragPanSpeed * modifier;
-                float dragY = -Input.GetAxis("Mouse Y") * dragPanSpeed * modifier;
-                move += new Vector3(dragX * 60f, dragY * 60f, 0f);
+                Vector2 dragDelta = new(-Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
+                Vector3 drag = (GetPlanarDirection(targetCamera.transform.right) * dragDelta.x + GetPlanarDirection(targetCamera.transform.forward) * dragDelta.y) * (dragPanSpeed * modifier);
+                _focusPoint += drag;
             }
 
-            _targetPosition += move * Time.unscaledDeltaTime;
-            ClampToGridBounds(ref _targetPosition);
+            ClampFocusToGrid(ref _focusPoint);
         }
 
         private void HandleZoomInput()
@@ -86,40 +97,44 @@ namespace Witherspoon.Game.Core
 
             if (invertScroll) scroll = -scroll;
 
-            _targetZoom -= scroll * zoomSpeed * Time.unscaledDeltaTime * 10f;
-            _targetZoom = Mathf.Clamp(_targetZoom, minZoom, maxZoom);
+            _targetDistance -= scroll * zoomSpeed * Time.unscaledDeltaTime;
+            _targetDistance = Mathf.Clamp(_targetDistance, minDistance, maxDistance);
+            ClampFocusToGrid(ref _focusPoint);
         }
 
         private void ApplyCameraTargets()
         {
-            if (!Mathf.Approximately(targetCamera.orthographicSize, _targetZoom))
-            {
-                targetCamera.orthographicSize = Mathf.Lerp(targetCamera.orthographicSize, _targetZoom, zoomLerpSpeed * Time.unscaledDeltaTime);
-            }
-            else
-            {
-                targetCamera.orthographicSize = _targetZoom;
-            }
+            _targetRotation = Quaternion.Euler(pitchDegrees, yawDegrees, 0f);
 
-            Vector3 current = targetCamera.transform.position;
-            Vector3 next = Vector3.Lerp(current, _targetPosition, 10f * Time.unscaledDeltaTime);
-            targetCamera.transform.position = new Vector3(next.x, next.y, current.z);
+            Vector3 desiredPosition = _focusPoint - (_targetRotation * Vector3.forward) * _targetDistance;
+            Vector3 currentPosition = targetCamera.transform.position;
+            Vector3 smoothedPosition = Vector3.Lerp(currentPosition, desiredPosition, positionLerp * Time.unscaledDeltaTime);
+
+            targetCamera.transform.position = smoothedPosition;
+            targetCamera.transform.rotation = Quaternion.Slerp(targetCamera.transform.rotation, _targetRotation, positionLerp * Time.unscaledDeltaTime);
         }
 
-        private void ClampToGridBounds(ref Vector3 position)
+        private Vector3 GetPlanarDirection(Vector3 vector)
+        {
+            vector.z = 0f;
+            if (vector == Vector3.zero) return Vector3.zero;
+            return vector.normalized;
+        }
+
+        private void ClampFocusToGrid(ref Vector3 focus)
         {
             if (grid == null) return;
-
-            float halfHeight = _targetZoom;
-            float halfWidth = halfHeight * targetCamera.aspect;
 
             Vector3 minWorld = grid.OriginPosition;
             Vector3 maxWorld = minWorld + new Vector3(grid.Dimensions.x * grid.CellSize, grid.Dimensions.y * grid.CellSize, 0f);
 
-            float minX = minWorld.x + halfWidth;
-            float maxX = maxWorld.x - halfWidth;
-            float minY = minWorld.y + halfHeight;
-            float maxY = maxWorld.y - halfHeight;
+            float radiusX = Mathf.Tan(Mathf.Deg2Rad * targetCamera.fieldOfView * 0.5f) * _targetDistance * targetCamera.aspect;
+            float radiusY = Mathf.Tan(Mathf.Deg2Rad * targetCamera.fieldOfView * 0.5f) * _targetDistance;
+
+            float minX = minWorld.x + radiusX;
+            float maxX = maxWorld.x - radiusX;
+            float minY = minWorld.y + radiusY;
+            float maxY = maxWorld.y - radiusY;
 
             if (minX > maxX)
             {
@@ -132,15 +147,32 @@ namespace Witherspoon.Game.Core
                 minY = maxY = center;
             }
 
-            position.x = Mathf.Clamp(position.x, minX, maxX);
-            position.y = Mathf.Clamp(position.y, minY, maxY);
+            focus.x = Mathf.Clamp(focus.x, minX, maxX);
+            focus.y = Mathf.Clamp(focus.y, minY, maxY);
+            focus.z = 0f;
+        }
+
+        private Vector3 ResolveInitialFocus()
+        {
+            if (grid == null)
+            {
+                return new Vector3(targetCamera.transform.position.x, targetCamera.transform.position.y, 0f);
+            }
+
+            Vector3 minWorld = grid.OriginPosition;
+            Vector3 maxWorld = minWorld + new Vector3(grid.Dimensions.x * grid.CellSize, grid.Dimensions.y * grid.CellSize, 0f);
+            Vector3 center = Vector3.Lerp(minWorld, maxWorld, 0.5f);
+            center.z = 0f;
+            return center;
         }
 
         public void SnapTo(Vector3 worldPosition)
         {
-            _targetPosition = new Vector3(worldPosition.x, worldPosition.y, targetCamera.transform.position.z);
-            ClampToGridBounds(ref _targetPosition);
-            targetCamera.transform.position = _targetPosition;
+            _focusPoint = new Vector3(worldPosition.x, worldPosition.y, 0f);
+            ClampFocusToGrid(ref _focusPoint);
+            Vector3 desiredPosition = _focusPoint - (_targetRotation * Vector3.forward) * _targetDistance;
+            targetCamera.transform.position = desiredPosition;
+            targetCamera.transform.rotation = _targetRotation;
         }
     }
 }
