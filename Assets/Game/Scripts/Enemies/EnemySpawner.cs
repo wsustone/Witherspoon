@@ -28,8 +28,15 @@ namespace Witherspoon.Game.Enemies
             var enemy = Instantiate(definition.Prefab, start, Quaternion.identity);
             if (enemy.TryGetComponent(out EnemyAgent agent))
             {
-                agent.Initialize(definition, goal, delay);
+                agent.Initialize(definition, goal, delay, _attachedGrid);
             }
+        }
+
+        private GridManager _attachedGrid;
+
+        public void AttachGrid(GridManager grid)
+        {
+            _attachedGrid = grid;
         }
     }
 }

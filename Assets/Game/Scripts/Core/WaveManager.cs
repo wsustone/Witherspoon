@@ -27,6 +27,10 @@ namespace Witherspoon.Game.Core
         public void Initialize(GridManager gridManager)
         {
             _gridManager = gridManager;
+            if (enemySpawner != null && gridManager != null)
+            {
+                enemySpawner.AttachGrid(gridManager);
+            }
             _timer = preWaveDelay;
             _currentWave = 0;
             _active = true;
