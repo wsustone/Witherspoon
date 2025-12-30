@@ -16,6 +16,11 @@ namespace Witherspoon.Game.Towers
         [SerializeField] private LineRenderer beamRenderer;
         [SerializeField] private SpriteRenderer coneRenderer;
         [SerializeField] private float fxDuration = 0.12f;
+        [Header("Placeholder 3D Visuals")]
+        [SerializeField] private bool usePlaceholderMesh = true;
+        [SerializeField] private float placeholderRadius = 0.45f;
+        [SerializeField] private float placeholderHeight = 1.6f;
+        [SerializeField] private float placeholderGlowHeight = 0.35f;
 
         private static readonly HashSet<TowerController> ActiveSet = new();
         public static IReadOnlyCollection<TowerController> ActiveTowers => ActiveSet;
@@ -35,6 +40,11 @@ namespace Witherspoon.Game.Towers
             if (coneRenderer != null)
             {
                 coneRenderer.enabled = false;
+            }
+
+            if (usePlaceholderMesh)
+            {
+                BuildPlaceholderMesh();
             }
         }
 
@@ -276,6 +286,63 @@ namespace Witherspoon.Game.Towers
         internal void RegisterKill()
         {
             _kills++;
+        }
+
+        private void BuildPlaceholderMesh()
+        {
+            DisableSpriteRenderers();
+
+            var existingMesh = GetComponentInChildren<MeshRenderer>();
+            if (existingMesh != null) return;
+
+            Color bodyColor = definition != null ? definition.HighlightColor : new Color(0.6f, 0.8f, 1f);
+            Color glowColor = definition != null ? definition.AttackColor : new Color(1f, 0.85f, 0.35f);
+
+            var body = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            body.name = "TowerBody3D";
+            body.transform.SetParent(transform, false);
+            body.transform.localScale = new Vector3(placeholderRadius, placeholderHeight * 0.5f, placeholderRadius);
+            body.transform.localPosition = new Vector3(0f, 0f, placeholderHeight * 0.5f);
+            body.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            ApplyMaterial(body, bodyColor);
+
+            var glow = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            glow.name = "TowerFocus3D";
+            glow.transform.SetParent(transform, false);
+            glow.transform.localScale = Vector3.one * (placeholderRadius * 0.9f);
+            glow.transform.localPosition = new Vector3(0f, 0f, placeholderHeight + placeholderGlowHeight);
+            ApplyMaterial(glow, glowColor);
+
+            RemoveCollider(body);
+            RemoveCollider(glow);
+        }
+
+        private void DisableSpriteRenderers()
+        {
+            foreach (var sprite in GetComponentsInChildren<SpriteRenderer>())
+            {
+                sprite.enabled = false;
+            }
+        }
+
+        private void ApplyMaterial(GameObject target, Color color)
+        {
+            if (target.TryGetComponent(out MeshRenderer renderer))
+            {
+                var material = new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
+                material.color = color;
+                renderer.material = material;
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                renderer.receiveShadows = true;
+            }
+        }
+
+        private void RemoveCollider(GameObject target)
+        {
+            if (target.TryGetComponent<Collider>(out var collider))
+            {
+                Destroy(collider);
+            }
         }
     }
 }

@@ -17,6 +17,11 @@ namespace Witherspoon.Game.Enemies
         public static System.Action<EnemyAgent> OnAnyReachedGoal;
 
         [SerializeField] private EnemyDefinition definition;
+        [Header("Placeholder 3D Visuals")]
+        [SerializeField] private bool usePlaceholderMesh = true;
+        [SerializeField] private float placeholderRadius = 0.35f;
+        [SerializeField] private float placeholderHeight = 1.2f;
+        [SerializeField] private float placeholderAccentHeight = 0.25f;
 
         private float _health;
         private Vector3 _goal;
@@ -88,6 +93,10 @@ namespace Witherspoon.Game.Enemies
             }
 
             RefreshPathRendererVisibility();
+            if (usePlaceholderMesh)
+            {
+                BuildPlaceholderMesh();
+            }
         }
 
         private void Update()
@@ -328,6 +337,62 @@ namespace Witherspoon.Game.Enemies
             foreach (var agent in ActiveSet)
             {
                 agent.RefreshPathRendererVisibility();
+            }
+        }
+
+        private void BuildPlaceholderMesh()
+        {
+            DisableSpriteRenderers();
+
+            if (GetComponentInChildren<MeshRenderer>() != null) return;
+
+            Color bodyColor = definition != null ? definition.FactionColor : new Color(0.8f, 0.4f, 0.9f);
+            Color accentColor = new Color(bodyColor.r * 0.9f, bodyColor.g * 0.9f, bodyColor.b * 1.2f, 1f);
+
+            var body = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            body.name = "EnemyBody3D";
+            body.transform.SetParent(transform, false);
+            body.transform.localScale = new Vector3(placeholderRadius, placeholderHeight * 0.5f, placeholderRadius);
+            body.transform.localPosition = new Vector3(0f, 0f, placeholderHeight * 0.5f);
+            body.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            ApplyMaterial(body, bodyColor);
+
+            var accent = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            accent.name = "EnemyCore3D";
+            accent.transform.SetParent(transform, false);
+            accent.transform.localScale = Vector3.one * (placeholderRadius * 0.7f);
+            accent.transform.localPosition = new Vector3(0f, 0f, placeholderHeight + placeholderAccentHeight);
+            ApplyMaterial(accent, accentColor);
+
+            RemoveCollider(body);
+            RemoveCollider(accent);
+        }
+
+        private void DisableSpriteRenderers()
+        {
+            foreach (var sprite in GetComponentsInChildren<SpriteRenderer>())
+            {
+                sprite.enabled = false;
+            }
+        }
+
+        private void ApplyMaterial(GameObject target, Color color)
+        {
+            if (target.TryGetComponent(out MeshRenderer renderer))
+            {
+                var material = new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
+                material.color = color;
+                renderer.material = material;
+                renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                renderer.receiveShadows = true;
+            }
+        }
+
+        private void RemoveCollider(GameObject target)
+        {
+            if (target.TryGetComponent<Collider>(out var collider))
+            {
+                Destroy(collider);
             }
         }
     }
