@@ -30,7 +30,7 @@ MonoBehaviour:
   overrideEffectDuration: 0
   towerName: Serpent
   icon: {fileID: 0}
-  highlightColor: {r: 0, g: 0, b: 0, a: 1}
+  highlightColor: {r: 1, g: 0, b: 0, a: 1}
   towerPrefab: {fileID: 3965421486017390489, guid: 5cc78a1f3ed064b608e51075a6ef80bd, type: 3}
   buildCost: 75
   range: 3

@@ -16,7 +16,7 @@ MonoBehaviour:
   role: Venom Torrent Beam
   loreSnippet: 
   icon: {fileID: 0}
-  highlightColor: {r: 0.7830189, g: 0.33610716, b: 0.601055, a: 1}
+  highlightColor: {r: 1, g: 0, b: 0, a: 1}
   attackColor: {r: 0.8867924, g: 0.037646834, b: 0.037646834, a: 1}
   attackStyle: 1
   range: 3
@@ -27,4 +27,6 @@ MonoBehaviour:
   projectileSpawnOffset: 0
   coneAngle: 40
   coneRotationOffset: 0
+  slowPercent: 0.1
+  effectDuration: 0.5
   synergyMorphs: []

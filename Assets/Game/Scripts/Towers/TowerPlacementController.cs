@@ -18,6 +18,7 @@ namespace Witherspoon.Game.Towers
 
         [Header("Build Options")]
         [SerializeField] private TowerDefinition defaultTower;
+        [SerializeField] private KeyCode cancelPlacementKey = KeyCode.Escape;
         private TowerDefinition _currentTower;
 
         [Header("Placement Preview")]
@@ -54,7 +55,11 @@ namespace Witherspoon.Game.Towers
 
         private void Update()
         {
+            HandleCancelInput();
+
             UpdatePreview();
+
+            if (_currentTower == null) return;
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -62,11 +67,24 @@ namespace Witherspoon.Game.Towers
             }
         }
 
+        public bool IsPlacing => _currentTower != null;
+
         public void SelectTower(TowerDefinition definition)
         {
-            if (definition == null) return;
             _currentTower = definition;
+            if (_currentTower == null)
+            {
+                HidePreview();
+                return;
+            }
             RefreshPreviewVisual();
+        }
+
+        public void CancelPlacement()
+        {
+            if (_currentTower == null) return;
+            _currentTower = null;
+            HidePreview();
         }
 
         private void UpdatePreview()
@@ -293,6 +311,19 @@ namespace Witherspoon.Game.Towers
             _rangeRingRenderer.startColor = color;
             _rangeRingRenderer.endColor = color;
             _rangeRingRenderer.gameObject.SetActive(true);
+        }
+
+        private void HandleCancelInput()
+        {
+            if (_currentTower == null) return;
+
+            bool cancelKeyPressed = cancelPlacementKey != KeyCode.None && Input.GetKeyDown(cancelPlacementKey);
+            bool rightClick = Input.GetMouseButtonDown(1);
+
+            if (cancelKeyPressed || rightClick)
+            {
+                CancelPlacement();
+            }
         }
     }
 }

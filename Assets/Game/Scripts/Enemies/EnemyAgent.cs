@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Witherspoon.Game.Data;
 using Witherspoon.Game.Map;
+using Witherspoon.Game.Towers;
 
 namespace Witherspoon.Game.Enemies
 {
@@ -25,13 +26,19 @@ namespace Witherspoon.Game.Enemies
         private float _slowTimer;
         private GridManager _grid;
         private readonly List<Vector3> _path = new();
+        private readonly List<Vector3> _pathPreviewPoints = new();
+        private LineRenderer _pathRenderer;
         private int _pathIndex;
         private bool _pendingPathRefresh;
+        private static bool _pathsVisible;
 
         public System.Action<EnemyAgent> OnReachedGoal;
         public System.Action<EnemyAgent> OnKilled;
 
         public EnemyDefinition Definition => definition;
+        public float CurrentHealth => _health;
+        public float MaxHealth => definition != null ? definition.BaseHealth : 100f;
+        public static bool PathsVisible => _pathsVisible;
 
         private void OnEnable()
         {
@@ -45,6 +52,11 @@ namespace Witherspoon.Game.Enemies
             {
                 _grid.GridChanged -= HandleGridChanged;
                 _grid = null;
+            }
+            if (_pathRenderer != null)
+            {
+                Destroy(_pathRenderer.gameObject);
+                _pathRenderer = null;
             }
         }
 
@@ -74,6 +86,8 @@ namespace Witherspoon.Game.Enemies
                 _grid.GridChanged += HandleGridChanged;
                 RecalculatePath();
             }
+
+            RefreshPathRendererVisibility();
         }
 
         private void Update()
@@ -92,6 +106,14 @@ namespace Witherspoon.Game.Enemies
                 RecalculatePath();
             }
             MoveTowardsGoal();
+        }
+
+        private void LateUpdate()
+        {
+            if (_pathsVisible)
+            {
+                UpdatePathRendererPositions();
+            }
         }
 
         private void MoveTowardsGoal()
@@ -125,13 +147,14 @@ namespace Witherspoon.Game.Enemies
             transform.position = new Vector3(pos.x, pos.y, 0f);
         }
 
-        public void ApplyDamage(float amount)
+        public void ApplyDamage(float amount, TowerController source = null)
         {
             _health -= amount;
             if (_health <= 0f)
             {
                 OnKilled?.Invoke(this);
                 OnAnyKilled?.Invoke(this);
+                source?.RegisterKill();
                 Destroy(gameObject);
             }
         }
@@ -184,6 +207,8 @@ namespace Witherspoon.Game.Enemies
                 _path.Clear();
                 _pathIndex = 0;
             }
+
+            RefreshPathRendererVisibility();
         }
 
         private void AdvancePathIfNeeded(bool forceAdvance = false)
@@ -221,6 +246,89 @@ namespace Witherspoon.Game.Enemies
             Vector3 delta = _goal - transform.position;
             delta.z = 0f;
             return delta.sqrMagnitude < 0.04f;
+        }
+
+        private void RefreshPathRendererVisibility()
+        {
+            if (!_pathsVisible)
+            {
+                if (_pathRenderer != null)
+                {
+                    _pathRenderer.gameObject.SetActive(false);
+                }
+                return;
+            }
+
+            UpdatePathRendererPositions();
+        }
+
+        private void EnsurePathRenderer()
+        {
+            if (_pathRenderer != null) return;
+
+            var go = new GameObject("EnemyPathRenderer")
+            {
+                hideFlags = HideFlags.HideInHierarchy
+            };
+            go.transform.SetParent(transform, worldPositionStays: false);
+            _pathRenderer = go.AddComponent<LineRenderer>();
+            _pathRenderer.useWorldSpace = true;
+            _pathRenderer.loop = false;
+            _pathRenderer.widthMultiplier = 0.05f;
+            _pathRenderer.numCapVertices = 2;
+            _pathRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            _pathRenderer.sortingOrder = 900;
+            _pathRenderer.gameObject.SetActive(false);
+        }
+
+        private void UpdatePathRendererPositions()
+        {
+            if (!_pathsVisible)
+            {
+                if (_pathRenderer != null)
+                {
+                    _pathRenderer.gameObject.SetActive(false);
+                }
+                return;
+            }
+
+            EnsurePathRenderer();
+            if (_pathRenderer == null) return;
+
+            _pathPreviewPoints.Clear();
+            _pathPreviewPoints.Add(transform.position);
+
+            if (_path.Count > 0 && _pathIndex < _path.Count)
+            {
+                for (int i = _pathIndex; i < _path.Count; i++)
+                {
+                    _pathPreviewPoints.Add(_path[i]);
+                }
+            }
+            else
+            {
+                _pathPreviewPoints.Add(_goal);
+            }
+
+            _pathRenderer.positionCount = _pathPreviewPoints.Count;
+            _pathRenderer.SetPositions(_pathPreviewPoints.ToArray());
+
+            Color color = definition != null ? definition.FactionColor : new Color(0.2f, 0.9f, 1f, 0.7f);
+            color.a = 0.7f;
+            _pathRenderer.startColor = color;
+            _pathRenderer.endColor = color;
+            _pathRenderer.gameObject.SetActive(true);
+        }
+
+        public static void SetPathVisualization(bool visible)
+        {
+            if (_pathsVisible == visible) return;
+            _pathsVisible = visible;
+
+            foreach (var agent in ActiveSet)
+            {
+                agent.RefreshPathRendererVisibility();
+            }
         }
     }
 }

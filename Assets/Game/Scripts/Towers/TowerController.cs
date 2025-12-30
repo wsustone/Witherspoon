@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Witherspoon.Game.Data;
@@ -16,7 +17,14 @@ namespace Witherspoon.Game.Towers
         [SerializeField] private SpriteRenderer coneRenderer;
         [SerializeField] private float fxDuration = 0.12f;
 
+        private static readonly HashSet<TowerController> ActiveSet = new();
+        public static IReadOnlyCollection<TowerController> ActiveTowers => ActiveSet;
+
         private float _fireCooldown;
+        private int _kills;
+
+        public TowerDefinition Definition => definition;
+        public int KillCount => _kills;
 
         private void Start()
         {
@@ -28,6 +36,16 @@ namespace Witherspoon.Game.Towers
             {
                 coneRenderer.enabled = false;
             }
+        }
+
+        private void OnEnable()
+        {
+            ActiveSet.Add(this);
+        }
+
+        private void OnDisable()
+        {
+            ActiveSet.Remove(this);
         }
 
         private void Update()
@@ -71,11 +89,11 @@ namespace Witherspoon.Game.Towers
             switch (definition.AttackMode)
             {
                 case TowerDefinition.AttackStyle.Beam:
-                    target.ApplyDamage(definition.Damage);
+                    target.ApplyDamage(definition.Damage, this);
                     StartCoroutine(FireBeamFx(target));
                     break;
                 case TowerDefinition.AttackStyle.Cone:
-                    target.ApplyDamage(definition.Damage);
+                    target.ApplyDamage(definition.Damage, this);
                     StartCoroutine(FireConeFx(target));
                     break;
                 case TowerDefinition.AttackStyle.Aura:
@@ -113,7 +131,7 @@ namespace Witherspoon.Game.Towers
                     }
                     else
                     {
-                        target.ApplyDamage(definition.Damage);
+                        target.ApplyDamage(definition.Damage, this);
                     }
                     break;
             }
@@ -253,6 +271,11 @@ namespace Witherspoon.Game.Towers
                 var newZone = wall.AddComponent<SlowZone>();
                 newZone.Initialize(definition.SlowPercent, definition.EffectDuration);
             }
+        }
+
+        internal void RegisterKill()
+        {
+            _kills++;
         }
     }
 }

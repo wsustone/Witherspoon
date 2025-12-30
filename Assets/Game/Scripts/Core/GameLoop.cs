@@ -1,4 +1,5 @@
 using UnityEngine;
+using Witherspoon.Game.Enemies;
 
 namespace Witherspoon.Game.Core
 {
@@ -15,7 +16,11 @@ namespace Witherspoon.Game.Core
 
         [Header("Runtime State")]
         [SerializeField] private bool autoStart = true;
+        [Header("Debug Hotkeys")]
+        [SerializeField] private KeyCode togglePathKey = KeyCode.BackQuote;
+        [SerializeField] private bool pathVisualizationOnStart;
         private bool _initialized;
+        private bool _pathVisualizationEnabled;
 
         private void Start()
         {
@@ -23,6 +28,10 @@ namespace Witherspoon.Game.Core
             {
                 Initialize();
             }
+
+            if (!_initialized) return;
+            _pathVisualizationEnabled = pathVisualizationOnStart;
+            EnemyAgent.SetPathVisualization(_pathVisualizationEnabled);
         }
 
         private void Update()
@@ -31,6 +40,7 @@ namespace Witherspoon.Game.Core
 
             waveManager?.Tick(Time.deltaTime);
             economyManager?.Tick(Time.deltaTime);
+            HandlePathHotkey();
         }
 
         public void Initialize()
@@ -42,6 +52,18 @@ namespace Witherspoon.Game.Core
             waveManager?.Initialize(gridManager);
 
             _initialized = true;
+            _pathVisualizationEnabled = pathVisualizationOnStart;
+            EnemyAgent.SetPathVisualization(_pathVisualizationEnabled);
+        }
+
+        private void HandlePathHotkey()
+        {
+            if (togglePathKey == KeyCode.None) return;
+            if (Input.GetKeyDown(togglePathKey))
+            {
+                _pathVisualizationEnabled = !_pathVisualizationEnabled;
+                EnemyAgent.SetPathVisualization(_pathVisualizationEnabled);
+            }
         }
     }
 }
