@@ -158,7 +158,37 @@ namespace Witherspoon.Game.Enemies
 
         public void ApplyDamage(float amount, TowerController source = null)
         {
-            _health -= amount;
+            float finalDamage = amount;
+            if (definition != null)
+            {
+                // Apply armor as flat reduction
+                finalDamage = Mathf.Max(0f, finalDamage - definition.Armor);
+
+                // Apply damage-type multiplier based on the source tower's attack style
+                var style = source != null && source.Definition != null
+                    ? source.Definition.AttackMode
+                    : Witherspoon.Game.Data.TowerDefinition.AttackStyle.Projectile;
+                switch (style)
+                {
+                    case Witherspoon.Game.Data.TowerDefinition.AttackStyle.Projectile:
+                        finalDamage *= definition.DmgTakenMulProjectile;
+                        break;
+                    case Witherspoon.Game.Data.TowerDefinition.AttackStyle.Beam:
+                        finalDamage *= definition.DmgTakenMulBeam;
+                        break;
+                    case Witherspoon.Game.Data.TowerDefinition.AttackStyle.Cone:
+                        finalDamage *= definition.DmgTakenMulCone;
+                        break;
+                    case Witherspoon.Game.Data.TowerDefinition.AttackStyle.Aura:
+                        finalDamage *= definition.DmgTakenMulAura;
+                        break;
+                    case Witherspoon.Game.Data.TowerDefinition.AttackStyle.Wall:
+                        finalDamage *= definition.DmgTakenMulWall;
+                        break;
+                }
+            }
+
+            _health -= finalDamage;
             if (_health <= 0f)
             {
                 OnKilled?.Invoke(this);
@@ -187,7 +217,9 @@ namespace Witherspoon.Game.Enemies
         public void ApplySlow(float slowPercent, float duration)
         {
             float clampedPercent = Mathf.Clamp01(slowPercent);
-            float candidateMultiplier = 1f - clampedPercent;
+            float effectiveness = definition != null ? definition.SlowEffectiveness : 1f;
+            float effectivePercent = Mathf.Clamp01(clampedPercent * effectiveness);
+            float candidateMultiplier = 1f - effectivePercent;
 
             if (candidateMultiplier < _slowMultiplier)
             {

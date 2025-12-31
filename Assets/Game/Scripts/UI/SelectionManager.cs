@@ -20,6 +20,7 @@ namespace Witherspoon.Game.UI
         [SerializeField] private FusionService fusionService;
         [SerializeField] private EconomyManager economyManager;
         [SerializeField] private KeyCode fusionHotkey = KeyCode.F;
+        [SerializeField] private bool debugFusion = false;
         [SerializeField] private KeyCode clearSelectionKey = KeyCode.Escape;
         [SerializeField] private float boardPlaneZ = 0f;
 
@@ -72,23 +73,24 @@ namespace Witherspoon.Game.UI
 
             if (fusionHotkey != KeyCode.None && Input.GetKeyDown(fusionHotkey))
             {
+                if (debugFusion) Debug.Log("[SelectionManager] Fusion hotkey pressed", this);
                 TryEnterFusionMode();
             }
 
             if (Input.GetMouseButtonDown(0))
             {
-                bool pointerOverUI = (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                    || (selectionPanel != null && selectionPanel.IsPointerOverSelf());
-                if (pointerOverUI)
-                {
-                    return;
-                }
                 if (_isFusing)
                 {
                     TryPickFusionTargetAtCursor();
                 }
                 else
                 {
+                    bool pointerOverUI = (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                        || (selectionPanel != null && selectionPanel.IsPointerOverSelf());
+                    if (pointerOverUI)
+                    {
+                        return;
+                    }
                     TrySelectAtCursor();
                 }
             }
@@ -158,9 +160,27 @@ namespace Witherspoon.Game.UI
 
         private void TryEnterFusionMode()
         {
-            if (_selectedTower == null) return;
+            if (_selectedTower == null)
+            {
+                if (selectionPanel != null)
+                {
+                    selectionPanel.ShowStatusMessage("Select a tower, then press F to start fusion");
+                }
+                if (debugFusion) Debug.Log("[SelectionManager] Fusion requested with no selected tower", this);
+                return;
+            }
+            if (fusionService == null || fusionService.Recipes == null || fusionService.Recipes.Count == 0)
+            {
+                if (selectionPanel != null)
+                {
+                    selectionPanel.ShowStatusMessage("No fusion recipes configured");
+                }
+                if (debugFusion) Debug.Log("[SelectionManager] No fusion recipes configured on FusionService", this);
+                return;
+            }
             _isFusing = true;
             _fuseSource = _selectedTower;
+            if (debugFusion) Debug.Log($"[SelectionManager] Entered fusion mode. Source={_fuseSource.name}", this);
             if (selectionPanel != null)
             {
                 selectionPanel.ShowStatusMessage("Fusion: Click a partner tower to merge");
@@ -171,6 +191,7 @@ namespace Witherspoon.Game.UI
         {
             _isFusing = false;
             _fuseSource = null;
+            if (debugFusion) Debug.Log("[SelectionManager] Exited fusion mode", this);
             if (_selectedTower != null)
             {
                 selectionPanel.ShowTower(_selectedTower);
@@ -194,12 +215,25 @@ namespace Witherspoon.Game.UI
             {
                 if (tower != null && tower != _fuseSource)
                 {
+                    if (debugFusion) Debug.Log($"[SelectionManager] Fusion click on target={tower.name}", this);
+                    // Preview recipe before attempting
+                    var preview = fusionService.PreviewResult(_fuseSource.Definition, tower.Definition);
+                    if (preview == null)
+                    {
+                        if (selectionPanel != null)
+                        {
+                            selectionPanel.ShowStatusMessage("No fusion recipe for this pair");
+                        }
+                        if (debugFusion) Debug.Log("[SelectionManager] No recipe for pair", this);
+                        return; // remain in fusion mode
+                    }
                     bool merged = fusionService.TryMerge(_fuseSource, tower, economyManager);
                     if (merged)
                     {
                         _selectedTower = _fuseSource; // A persists through TransformTo
                         _selectedEnemy = null;
                         selectionPanel.ShowTower(_selectedTower);
+                        if (debugFusion) Debug.Log("[SelectionManager] Fusion succeeded", this);
                         ExitFusionMode();
                     }
                     else
@@ -208,8 +242,56 @@ namespace Witherspoon.Game.UI
                         {
                             selectionPanel.ShowStatusMessage("Fusion failed: requirements not met");
                         }
+                        if (debugFusion) Debug.Log("[SelectionManager] Fusion failed: requirements not met", this);
                         // remain in fusion mode
                     }
+                    return;
+                }
+                if (tower == _fuseSource)
+                {
+                    if (selectionPanel != null)
+                    {
+                        selectionPanel.ShowStatusMessage("Pick a different tower to fuse with");
+                    }
+                    if (debugFusion) Debug.Log("[SelectionManager] Clicked source tower again; waiting for different partner", this);
+                    return;
+                }
+            }
+
+            // Raycast didn't hit a tower: try nearest tower to cursor projection
+            var worldPoint = ProjectRayToBoard(ray);
+            if (worldPoint.HasValue && TryFindNearest(worldPoint.Value, out var nearTower, out _))
+            {
+                if (nearTower != null && nearTower != _fuseSource)
+                {
+                    if (debugFusion) Debug.Log($"[SelectionManager] Fusion nearest target={nearTower.name}", this);
+                    var preview = fusionService.PreviewResult(_fuseSource.Definition, nearTower.Definition);
+                    if (preview == null)
+                    {
+                        selectionPanel?.ShowStatusMessage("No fusion recipe for this pair");
+                        if (debugFusion) Debug.Log("[SelectionManager] No recipe for nearest pair", this);
+                        return;
+                    }
+                    bool merged = fusionService.TryMerge(_fuseSource, nearTower, economyManager);
+                    if (merged)
+                    {
+                        _selectedTower = _fuseSource;
+                        _selectedEnemy = null;
+                        selectionPanel.ShowTower(_selectedTower);
+                        if (debugFusion) Debug.Log("[SelectionManager] Fusion succeeded (nearest)", this);
+                        ExitFusionMode();
+                    }
+                    else
+                    {
+                        selectionPanel?.ShowStatusMessage("Fusion failed: requirements not met");
+                        if (debugFusion) Debug.Log("[SelectionManager] Fusion failed (nearest): requirements not met", this);
+                    }
+                    return;
+                }
+                if (nearTower == _fuseSource)
+                {
+                    selectionPanel?.ShowStatusMessage("Pick a different tower to fuse with");
+                    if (debugFusion) Debug.Log("[SelectionManager] Nearest is source tower; waiting for different partner", this);
                     return;
                 }
             }

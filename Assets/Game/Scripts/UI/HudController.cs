@@ -37,7 +37,16 @@ namespace Witherspoon.Game.UI
         {
             if (waveManager != null && waveLabel != null)
             {
-                waveLabel.text = $"Wave {waveManager.CurrentWave + 1} in {waveManager.TimeUntilNextWave:0.0}s";
+                int nextWave = waveManager.CurrentWave + 1;
+                string enemyName = waveManager.GetPreviewEnemyNameForWave(nextWave);
+                if (!string.IsNullOrEmpty(enemyName))
+                {
+                    waveLabel.text = $"Wave {nextWave} ({enemyName}) in {waveManager.TimeUntilNextWave:0.0}s";
+                }
+                else
+                {
+                    waveLabel.text = $"Wave {nextWave} in {waveManager.TimeUntilNextWave:0.0}s";
+                }
             }
         }
 

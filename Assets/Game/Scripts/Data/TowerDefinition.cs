@@ -67,6 +67,15 @@ namespace Witherspoon.Game.Data
         [SerializeField] private Sprite icon;
         [SerializeField] private Color highlightColor = Color.white;
 
+        [Header("UI Display Flags")]
+        [SerializeField] private bool uiShowRange = true;
+        [SerializeField] private bool uiShowFireRate = true;
+        [SerializeField] private bool uiShowDamage = true;
+        [SerializeField] private bool uiShowSlow = true;
+        [SerializeField] private bool uiShowConeAngle = true;
+        [SerializeField] private bool uiShowProjectileDetails = true;
+        [SerializeField] private bool uiShowKills = true;
+
         [Header("Gameplay")]
         [SerializeField] private GameObject towerPrefab;
         [SerializeField] private int buildCost = 75;
@@ -117,6 +126,13 @@ namespace Witherspoon.Game.Data
         public float SlowPercent => (!overrideSlowPercent && archetype != null) ? archetype.SlowPercent : slowPercent;
         public float EffectDuration => (!overrideEffectDuration && archetype != null) ? archetype.EffectDuration : effectDuration;
         public TowerUpgradeTier[] UpgradeTiers => upgradeTiers;
+        public bool UiShowRange => uiShowRange;
+        public bool UiShowFireRate => uiShowFireRate;
+        public bool UiShowDamage => uiShowDamage;
+        public bool UiShowSlow => uiShowSlow;
+        public bool UiShowConeAngle => uiShowConeAngle;
+        public bool UiShowProjectileDetails => uiShowProjectileDetails;
+        public bool UiShowKills => uiShowKills;
         public EssenceDefinition FusionRequiredEssence => fusionRequiredEssence;
         public int FusionRequiredEssenceAmount => fusionRequiredEssenceAmount;
         public EssenceDefinition FusionRequiredEssenceAlt => fusionRequiredEssenceAlt;

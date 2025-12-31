@@ -524,10 +524,22 @@ namespace Witherspoon.Game.UI
             SetText(subtitleLabel, $"{definition.AttackMode} Tower");
 
             _builder.Length = 0;
-            _builder.AppendLine($"Range: {tower.CurrentRange:0.0}");
-            _builder.AppendLine($"Fire Rate: {tower.CurrentFireRate:0.0}/s");
-            _builder.AppendLine($"Damage: {tower.CurrentDamage:0}");
-            _builder.Append($"Kills: {tower.KillCount}");
+            if (definition.UiShowRange) _builder.AppendLine($"Range: {tower.CurrentRange:0.0}");
+            if (definition.UiShowFireRate) _builder.AppendLine($"Fire Rate: {tower.CurrentFireRate:0.0}/s");
+            if (definition.UiShowDamage) _builder.AppendLine($"Damage: {tower.CurrentDamage:0}");
+            if (definition.UiShowSlow && definition.SlowPercent > 0f)
+            {
+                _builder.AppendLine($"Slow: {(tower.CurrentSlowPercent * 100f):0}% for {definition.EffectDuration:0.0}s");
+            }
+            if (definition.AttackMode == Witherspoon.Game.Data.TowerDefinition.AttackStyle.Cone && definition.UiShowConeAngle)
+            {
+                _builder.AppendLine($"Cone Angle: {definition.ConeAngle:0}°");
+            }
+            if (definition.AttackMode == Witherspoon.Game.Data.TowerDefinition.AttackStyle.Projectile && definition.UiShowProjectileDetails)
+            {
+                _builder.AppendLine(definition.HitsInstantly ? "Hit: Instant" : $"Projectile Speed: {definition.ProjectileSpeed:0.0}");
+            }
+            if (definition.UiShowKills) _builder.Append($"Kills: {tower.KillCount}");
             SetText(statsLabel, _builder.ToString());
         }
 
@@ -544,9 +556,45 @@ namespace Witherspoon.Game.UI
             SetText(subtitleLabel, "Enemy");
 
             _builder.Length = 0;
-            _builder.AppendLine($"Health: {enemy.CurrentHealth:0}/{enemy.MaxHealth:0}");
-            _builder.AppendLine($"Move Speed: {def.MoveSpeed:0.0}");
-            _builder.Append($"Gold Reward: {def.GoldReward}");
+            if (def.UiShowHealth) _builder.AppendLine($"Health: {enemy.CurrentHealth:0}/{enemy.MaxHealth:0}");
+            if (def.UiShowMoveSpeed) _builder.AppendLine($"Move Speed: {def.MoveSpeed:0.0}");
+            if (def.UiShowGoldReward) _builder.AppendLine($"Gold Reward: {def.GoldReward}");
+            if (def.UiShowArmor && def.Armor > 0f)
+            {
+                _builder.AppendLine($"Armor: {def.Armor:0}");
+            }
+            if (def.UiShowResistances)
+            {
+                bool any = false;
+                _builder.Append("Resistances: ");
+                void AddRes(string label, float mul)
+                {
+                    if (Mathf.Abs(mul - 1f) > 0.01f)
+                    {
+                        if (any) _builder.Append(", ");
+                        _builder.Append($"{label} {mul:0.##}x");
+                        any = true;
+                    }
+                }
+                AddRes("Proj", def.DmgTakenMulProjectile);
+                AddRes("Beam", def.DmgTakenMulBeam);
+                AddRes("Cone", def.DmgTakenMulCone);
+                AddRes("Aura", def.DmgTakenMulAura);
+                AddRes("Wall", def.DmgTakenMulWall);
+                if (any) _builder.AppendLine();
+            }
+            if (def.UiShowSlowResist)
+            {
+                _builder.AppendLine($"Slow Taken: {(def.SlowEffectiveness * 100f):0}%");
+            }
+            if (def.UiShowTraits && !string.IsNullOrWhiteSpace(def.SpecialTraits))
+            {
+                _builder.AppendLine($"Traits: {def.SpecialTraits}");
+            }
+            if (def.UiShowEssenceDrop && def.DropEssence != null && def.EssenceAmount > 0)
+            {
+                _builder.Append($"Drops: {def.EssenceAmount}x {def.DropEssence.DisplayName}");
+            }
             SetText(statsLabel, _builder.ToString());
         }
 

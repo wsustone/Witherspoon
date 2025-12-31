@@ -1,6 +1,7 @@
 using UnityEngine;
 using Witherspoon.Game.Map;
 using Witherspoon.Game.Enemies;
+using Witherspoon.Game.Data;
 
 namespace Witherspoon.Game.Core
 {
@@ -55,6 +56,13 @@ namespace Witherspoon.Game.Core
             {
                 enemySpawner.SpawnWave(_currentWave, _gridManager);
             }
+        }
+
+        public string GetPreviewEnemyNameForWave(int waveNumber)
+        {
+            if (enemySpawner == null) return null;
+            EnemyDefinition preview = enemySpawner.PreviewEnemyForWave(waveNumber);
+            return preview != null ? preview.EnemyName : null;
         }
     }
 }

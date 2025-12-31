@@ -176,6 +176,16 @@ namespace Witherspoon.Game.Enemies
             return IsSpawnable(defaultEnemy) ? defaultEnemy : null;
         }
 
+        // Preview what enemy would be selected for a given wave (for HUD display)
+        public EnemyDefinition PreviewEnemyForWave(int waveNumber)
+        {
+            var pick = ResolveEnemyForWave(waveNumber);
+            if (IsSpawnable(pick)) return pick;
+            if (IsSpawnable(defaultEnemy)) return defaultEnemy;
+            if (enemyFamilies != null && IsSpawnable(enemyFamilies.DefaultEnemy)) return enemyFamilies.DefaultEnemy;
+            return null;
+        }
+
         private void SpawnEnemy(EnemyDefinition definition, Vector3 start, Vector3 goal, float delay)
         {
             if (definition?.Prefab == null) return;
