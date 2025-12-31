@@ -43,18 +43,7 @@ MonoBehaviour:
     fireRateMultiplier: 0
     damageMultiplier: 0
     slowMultiplier: 0
-    upgradeTime: 0
-    requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
-    requiredEssenceAmount: 5
-    requiredEssenceAlt: {fileID: 11400000, guid: ae9bf6dad7b9145aba023ce3323ff42b, type: 2}
-    requiredEssenceAltAmount: 1
-  - tierName: 
-    cost: 0
-    rangeMultiplier: 0
-    fireRateMultiplier: 0
-    damageMultiplier: 0
-    slowMultiplier: 0
-    upgradeTime: 0
+    upgradeTime: 10
     requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
     requiredEssenceAmount: 10
     requiredEssenceAlt: {fileID: 11400000, guid: ae9bf6dad7b9145aba023ce3323ff42b, type: 2}
@@ -65,11 +54,15 @@ MonoBehaviour:
     fireRateMultiplier: 0
     damageMultiplier: 0
     slowMultiplier: 0
-    upgradeTime: 0
+    upgradeTime: 15
     requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
-    requiredEssenceAmount: 15
+    requiredEssenceAmount: 20
     requiredEssenceAlt: {fileID: 11400000, guid: ae9bf6dad7b9145aba023ce3323ff42b, type: 2}
     requiredEssenceAltAmount: 6
+  fusionRequiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
+  fusionRequiredEssenceAmount: 5
+  fusionRequiredEssenceAlt: {fileID: 11400000, guid: ae9bf6dad7b9145aba023ce3323ff42b, type: 2}
+  fusionRequiredEssenceAltAmount: 1
   projectilePrefab: {fileID: 0}
   projectileSpeed: 8
   hitsInstantly: 0
