@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a7ddf2da7544d4e8e0f44fc12e7ded, type: 3}
+  m_Name: Anchor Breaker
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.EnemyDefinition
+  enemyName: Anchor Breaker
+  portrait: {fileID: 0}
+  factionColor: {r: 0.09198113, g: 0.21935917, b: 0.3679245, a: 1}
+  prefab: {fileID: 3002126579560956931, guid: 3a3085eaa261147cba69f8ff5845dbfe, type: 3}
+  baseHealth: 100
+  moveSpeed: 1.5
+  goldReward: 10
+  dropEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
+  essenceAmount: 1

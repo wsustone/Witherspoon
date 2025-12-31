@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Witherspoon.Game.Enemies;
 using Witherspoon.Game.Towers;
+using Witherspoon.Game.Core;
 
 namespace Witherspoon.Game.UI
 {
@@ -15,11 +16,17 @@ namespace Witherspoon.Game.UI
         [SerializeField] private Camera worldCamera;
         [SerializeField] private TowerPlacementController placementController;
         [SerializeField] private SelectionPanel selectionPanel;
+        [Header("Fusion")]
+        [SerializeField] private FusionService fusionService;
+        [SerializeField] private EconomyManager economyManager;
+        [SerializeField] private KeyCode fusionHotkey = KeyCode.F;
         [SerializeField] private KeyCode clearSelectionKey = KeyCode.Escape;
         [SerializeField] private float boardPlaneZ = 0f;
 
         private TowerController _selectedTower;
         private EnemyAgent _selectedEnemy;
+        private bool _isFusing;
+        private TowerController _fuseSource;
 
         private void Reset()
         {
@@ -35,6 +42,15 @@ namespace Witherspoon.Game.UI
                 worldCamera = Camera.main;
             }
 
+            if (fusionService == null)
+            {
+                fusionService = FindObjectOfType<FusionService>();
+            }
+            if (economyManager == null)
+            {
+                economyManager = FindObjectOfType<EconomyManager>();
+            }
+
             if (placementController != null && placementController.IsPlacing)
             {
                 ClearSelection();
@@ -43,17 +59,38 @@ namespace Witherspoon.Game.UI
 
             if (clearSelectionKey != KeyCode.None && Input.GetKeyDown(clearSelectionKey))
             {
-                ClearSelection();
+                if (_isFusing)
+                {
+                    ExitFusionMode();
+                }
+                else
+                {
+                    ClearSelection();
+                }
                 return;
+            }
+
+            if (fusionHotkey != KeyCode.None && Input.GetKeyDown(fusionHotkey))
+            {
+                TryEnterFusionMode();
             }
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                bool pointerOverUI = (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                    || (selectionPanel != null && selectionPanel.IsPointerOverSelf());
+                if (pointerOverUI)
                 {
                     return;
                 }
-                TrySelectAtCursor();
+                if (_isFusing)
+                {
+                    TryPickFusionTargetAtCursor();
+                }
+                else
+                {
+                    TrySelectAtCursor();
+                }
             }
         }
 
@@ -117,6 +154,67 @@ namespace Witherspoon.Game.UI
             _selectedTower = null;
             _selectedEnemy = null;
             selectionPanel.Hide();
+        }
+
+        private void TryEnterFusionMode()
+        {
+            if (_selectedTower == null) return;
+            _isFusing = true;
+            _fuseSource = _selectedTower;
+            if (selectionPanel != null)
+            {
+                selectionPanel.ShowStatusMessage("Fusion: Click a partner tower to merge");
+            }
+        }
+
+        private void ExitFusionMode()
+        {
+            _isFusing = false;
+            _fuseSource = null;
+            if (_selectedTower != null)
+            {
+                selectionPanel.ShowTower(_selectedTower);
+            }
+            else
+            {
+                selectionPanel.Hide();
+            }
+        }
+
+        private void TryPickFusionTargetAtCursor()
+        {
+            if (worldCamera == null || _fuseSource == null || fusionService == null || economyManager == null)
+            {
+                ExitFusionMode();
+                return;
+            }
+
+            Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
+            if (TryRaycastTargets(ray, out TowerController tower, out _))
+            {
+                if (tower != null && tower != _fuseSource)
+                {
+                    bool merged = fusionService.TryMerge(_fuseSource, tower, economyManager);
+                    if (merged)
+                    {
+                        _selectedTower = _fuseSource; // A persists through TransformTo
+                        _selectedEnemy = null;
+                        selectionPanel.ShowTower(_selectedTower);
+                        ExitFusionMode();
+                    }
+                    else
+                    {
+                        if (selectionPanel != null)
+                        {
+                            selectionPanel.ShowStatusMessage("Fusion failed: requirements not met");
+                        }
+                        // remain in fusion mode
+                    }
+                    return;
+                }
+            }
+
+            // If clicked empty space while fusing, do nothing (stay in fusion mode)
         }
 
         private bool TryRaycastTargets(Ray ray, out TowerController tower, out EnemyAgent enemy)

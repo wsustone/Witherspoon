@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf865499a0124f08b4eb61e171a09da, type: 3}
+  m_Name: ObsidianTorrentRecipe
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.FusionRecipe
+  inputLeft: {fileID: 11400000, guid: bccdd4bb07f0e496f8ef2012267e6c6e, type: 2}
+  inputRight: {fileID: 11400000, guid: 9901ad74a19854ceebaef69fd78d8eb4, type: 2}
+  requiredEssence: {fileID: 11400000, guid: ae9bf6dad7b9145aba023ce3323ff42b, type: 2}
+  requiredAmount: 1
+  resultDefinition: {fileID: 11400000, guid: 320c6194d59d84c89aa0c81b6ea9b003, type: 2}

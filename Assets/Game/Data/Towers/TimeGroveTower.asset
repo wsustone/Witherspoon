@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fd6a48ae46145d3bb54b1cdf0f0331, type: 3}
+  m_Name: TimeGroveTower
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
+  archetype: {fileID: 11400000, guid: d162a79721a4b44cab1e5855d67890e6, type: 2}
+  overrideTowerName: 0
+  overrideIcon: 0
+  overrideHighlightColor: 0
+  overrideAttackColor: 0
+  overrideRange: 0
+  overrideFireRate: 0
+  overrideDamage: 0
+  overrideProjectileSpeed: 0
+  overrideHitsInstantly: 0
+  overrideProjectileSpawnOffset: 0
+  overrideAttackMode: 0
+  overrideConeAngle: 0
+  overrideConeRotationOffset: 0
+  overrideSlowPercent: 0
+  overrideEffectDuration: 0
+  towerName: Time Grove
+  icon: {fileID: 0}
+  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  towerPrefab: {fileID: 0}
+  buildCost: 75
+  range: 3
+  fireRate: 1.2
+  damage: 25
+  upgradeTiers:
+  - tierName: 
+    cost: 0
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 0
+    requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
+    requiredEssenceAmount: 5
+    requiredEssenceAlt: {fileID: 11400000, guid: 9450b478f55c84b8d9d04254b642a09c, type: 2}
+    requiredEssenceAltAmount: 1
+  - tierName: 
+    cost: 0
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 0
+    requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
+    requiredEssenceAmount: 10
+    requiredEssenceAlt: {fileID: 11400000, guid: 9450b478f55c84b8d9d04254b642a09c, type: 2}
+    requiredEssenceAltAmount: 3
+  - tierName: 
+    cost: 0
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 0
+    requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
+    requiredEssenceAmount: 15
+    requiredEssenceAlt: {fileID: 11400000, guid: 9450b478f55c84b8d9d04254b642a09c, type: 2}
+    requiredEssenceAltAmount: 6
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 8
+  hitsInstantly: 0
+  projectileSpawnOffset: 0.35
+  attackMode: 0
+  attackColor: {r: 1, g: 1, b: 1, a: 1}
+  coneAngle: 40
+  coneRotationOffset: 0
+  slowPercent: 0.1
+  effectDuration: 0.5

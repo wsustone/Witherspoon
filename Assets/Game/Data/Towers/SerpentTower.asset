@@ -36,6 +36,40 @@ MonoBehaviour:
   range: 3
   fireRate: 1.2
   damage: 25
+  upgradeTiers:
+  - tierName: 
+    cost: 300
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 5
+    requiredEssence: {fileID: 0}
+    requiredEssenceAmount: 0
+    requiredEssenceAlt: {fileID: 0}
+    requiredEssenceAltAmount: 0
+  - tierName: 
+    cost: 900
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 10
+    requiredEssence: {fileID: 0}
+    requiredEssenceAmount: 0
+    requiredEssenceAlt: {fileID: 0}
+    requiredEssenceAltAmount: 0
+  - tierName: 
+    cost: 2500
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 15
+    requiredEssence: {fileID: 0}
+    requiredEssenceAmount: 0
+    requiredEssenceAlt: {fileID: 0}
+    requiredEssenceAltAmount: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 8
   hitsInstantly: 0

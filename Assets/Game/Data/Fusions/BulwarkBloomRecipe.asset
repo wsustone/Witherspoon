@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf865499a0124f08b4eb61e171a09da, type: 3}
+  m_Name: BulwarkBloomRecipe
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.FusionRecipe
+  inputLeft: {fileID: 11400000, guid: d7b9e3548d5b44ddd99696540b15ef75, type: 2}
+  inputRight: {fileID: 11400000, guid: bccdd4bb07f0e496f8ef2012267e6c6e, type: 2}
+  requiredEssence: {fileID: 11400000, guid: e1ae968ddc36242b6a17c5870a5f7841, type: 2}
+  requiredAmount: 1
+  resultDefinition: {fileID: 11400000, guid: ce9d28ded240e4b05a8b6b5306c01588, type: 2}

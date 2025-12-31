@@ -10,12 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5a7ddf2da7544d4e8e0f44fc12e7ded, type: 3}
-  m_Name: GuardianWisp
+  m_Name: Pathforger
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.EnemyDefinition
-  enemyName: Wisp
+  enemyName: Pathforger
   portrait: {fileID: 0}
-  factionColor: {r: 0, g: 1, b: 1, a: 1}
-  prefab: {fileID: 3002126579560956931, guid: 685f4c77ed62341faa1336b0718334ab, type: 3}
+  factionColor: {r: 0.23829654, g: 0.49456427, b: 0.8018868, a: 1}
+  prefab: {fileID: 3002126579560956931, guid: 946614fb2bd0e44bcafb0063fb348c4f, type: 3}
   baseHealth: 100
   moveSpeed: 1.5
   goldReward: 10
+  dropEssence: {fileID: 0}
+  essenceAmount: 0

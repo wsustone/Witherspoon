@@ -316,10 +316,48 @@ namespace Witherspoon.Game.UI
             var nextTier = _currentTower.NextTier;
             if (nextTier == null) return;
 
+            var inv = economyManager.Essences;
+            var reqEss = nextTier.RequiredEssence;
+            int reqAmt = nextTier.RequiredEssenceAmount;
+            var reqEssAlt = nextTier.RequiredEssenceAlt;
+            int reqAmtAlt = nextTier.RequiredEssenceAltAmount;
+
+            bool req1Valid = reqEss != null && reqAmt > 0;
+            bool req2Valid = reqEssAlt != null && reqAmtAlt > 0;
+            bool canUse1 = req1Valid && inv != null && inv.GetCount(reqEss) >= reqAmt;
+            bool canUse2 = req2Valid && inv != null && inv.GetCount(reqEssAlt) >= reqAmtAlt;
+            bool hasEssence = (!req1Valid && !req2Valid) || canUse1 || canUse2;
+            if (!hasEssence)
+            {
+                RefreshUpgradeUI(_currentTower);
+                return;
+            }
+
             if (!economyManager.TrySpend(nextTier.Cost))
             {
                 RefreshUpgradeUI(_currentTower);
                 return;
+            }
+
+            if (inv != null)
+            {
+                bool consumed = false;
+                if (canUse1)
+                {
+                    consumed = inv.TryConsume(reqEss, reqAmt);
+                }
+                else if (canUse2)
+                {
+                    consumed = inv.TryConsume(reqEssAlt, reqAmtAlt);
+                }
+
+                if (!consumed && (req1Valid || req2Valid))
+                {
+                    // Refund gold if essence consumption failed due to race conditions
+                    economyManager.AddGold(nextTier.Cost);
+                    RefreshUpgradeUI(_currentTower);
+                    return;
+                }
             }
 
             _currentTower.BeginUpgrade();
@@ -361,15 +399,76 @@ namespace Witherspoon.Game.UI
             int availableGold = hasEconomy ? economyManager.CurrentGold : 0;
             bool hasGold = hasEconomy && availableGold >= cost;
 
-            upgradeButton.interactable = hasGold && tower.CanUpgrade();
+            var reqEss = nextTier.RequiredEssence;
+            int reqAmt = nextTier.RequiredEssenceAmount;
+            var reqEssAlt = nextTier.RequiredEssenceAlt;
+            int reqAmtAlt = nextTier.RequiredEssenceAltAmount;
+
+            int haveEss1 = (reqEss != null && economyManager?.Essences != null) ? economyManager.Essences.GetCount(reqEss) : 0;
+            int haveEss2 = (reqEssAlt != null && economyManager?.Essences != null) ? economyManager.Essences.GetCount(reqEssAlt) : 0;
+
+            bool req1Valid = reqEss != null && reqAmt > 0;
+            bool req2Valid = reqEssAlt != null && reqAmtAlt > 0;
+            bool canUse1 = req1Valid && haveEss1 >= reqAmt;
+            bool canUse2 = req2Valid && haveEss2 >= reqAmtAlt;
+            bool hasEssence = (!req1Valid && !req2Valid) || canUse1 || canUse2;
+
+            upgradeButton.interactable = hasGold && hasEssence && tower.CanUpgrade();
 
             string tierName = string.IsNullOrWhiteSpace(nextTier.TierName) ? $"Tier {tower.UpgradeTier + 2}" : nextTier.TierName;
             string buttonText = "Upgrade";
-            string statusText = hasGold
-                ? $"Next: {tierName}"
-                : $"Need {Mathf.Max(0, cost - availableGold)}g more for {tierName}";
+            string statusText;
+            if (!hasGold)
+            {
+                statusText = $"Need {Mathf.Max(0, cost - availableGold)}g more for {tierName}";
+            }
+            else if (!hasEssence)
+            {
+                if (req1Valid && req2Valid)
+                {
+                    int need1 = Mathf.Max(0, reqAmt - haveEss1);
+                    int need2 = Mathf.Max(0, reqAmtAlt - haveEss2);
+                    statusText = $"Need {need1}x {reqEss.DisplayName} OR {need2}x {reqEssAlt.DisplayName}";
+                }
+                else if (req1Valid)
+                {
+                    int need = Mathf.Max(0, reqAmt - haveEss1);
+                    statusText = $"Need {need}x {reqEss.DisplayName} for {tierName}";
+                }
+                else if (req2Valid)
+                {
+                    int need = Mathf.Max(0, reqAmtAlt - haveEss2);
+                    statusText = $"Need {need}x {reqEssAlt.DisplayName} for {tierName}";
+                }
+                else
+                {
+                    statusText = $"Next: {tierName}";
+                }
+            }
+            else
+            {
+                statusText = $"Next: {tierName}";
+            }
 
-            SetUpgradeTexts(buttonText, statusText, $"{cost}g");
+            string costText;
+            if (req1Valid && req2Valid)
+            {
+                costText = $"{cost}g + ({reqAmt}x {reqEss.DisplayName} OR {reqAmtAlt}x {reqEssAlt.DisplayName})";
+            }
+            else if (req1Valid)
+            {
+                costText = $"{cost}g + {reqAmt}x {reqEss.DisplayName}";
+            }
+            else if (req2Valid)
+            {
+                costText = $"{cost}g + {reqAmtAlt}x {reqEssAlt.DisplayName}";
+            }
+            else
+            {
+                costText = $"{cost}g";
+            }
+
+            SetUpgradeTexts(buttonText, statusText, costText);
         }
 
         private void SetUpgradeVisibility(bool visible)
@@ -449,6 +548,25 @@ namespace Witherspoon.Game.UI
             _builder.AppendLine($"Move Speed: {def.MoveSpeed:0.0}");
             _builder.Append($"Gold Reward: {def.GoldReward}");
             SetText(statsLabel, _builder.ToString());
+        }
+
+        // Public helpers for selection/fusion UX
+        public void ShowStatusMessage(string message)
+        {
+            if (upgradeStatusLabel != null)
+            {
+                upgradeStatusLabel.text = message;
+                upgradeStatusLabel.gameObject.SetActive(true);
+            }
+            SetPanelActive(true);
+        }
+
+        public bool IsPointerOverSelf()
+        {
+            if (panelRoot == null) return false;
+            var rt = panelRoot.GetComponent<RectTransform>();
+            if (rt == null) return false;
+            return RectTransformUtility.RectangleContainsScreenPoint(rt, Input.mousePosition);
         }
     }
 }

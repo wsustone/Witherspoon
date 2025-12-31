@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: WolfTower
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
   archetype: {fileID: 11400000, guid: c889124013a6f40d18f2a7ec8cdef549, type: 2}
+  overrideTowerName: 0
+  overrideIcon: 0
+  overrideHighlightColor: 0
+  overrideAttackColor: 0
+  overrideRange: 0
+  overrideFireRate: 0
+  overrideDamage: 0
+  overrideProjectileSpeed: 0
+  overrideHitsInstantly: 0
+  overrideProjectileSpawnOffset: 0
+  overrideAttackMode: 0
+  overrideConeAngle: 0
+  overrideConeRotationOffset: 0
+  overrideSlowPercent: 0
+  overrideEffectDuration: 0
   towerName: Wolf
   icon: {fileID: 0}
   highlightColor: {r: 0, g: 0, b: 0, a: 1}
@@ -21,6 +36,40 @@ MonoBehaviour:
   range: 3
   fireRate: 1.2
   damage: 25
+  upgradeTiers:
+  - tierName: 
+    cost: 300
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 5
+    requiredEssence: {fileID: 0}
+    requiredEssenceAmount: 0
+    requiredEssenceAlt: {fileID: 0}
+    requiredEssenceAltAmount: 0
+  - tierName: 
+    cost: 900
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 10
+    requiredEssence: {fileID: 0}
+    requiredEssenceAmount: 0
+    requiredEssenceAlt: {fileID: 0}
+    requiredEssenceAltAmount: 0
+  - tierName: 
+    cost: 2500
+    rangeMultiplier: 0
+    fireRateMultiplier: 0
+    damageMultiplier: 0
+    slowMultiplier: 0
+    upgradeTime: 15
+    requiredEssence: {fileID: 0}
+    requiredEssenceAmount: 0
+    requiredEssenceAlt: {fileID: 0}
+    requiredEssenceAltAmount: 0
   projectilePrefab: {fileID: 8296764524300265392, guid: b53c0cdf5939043e69d0224d93283f2d, type: 3}
   projectileSpeed: 12
   hitsInstantly: 0

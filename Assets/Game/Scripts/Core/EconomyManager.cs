@@ -1,5 +1,6 @@
 using UnityEngine;
 using Witherspoon.Game.Enemies;
+using Witherspoon.Game.Data;
 
 namespace Witherspoon.Game.Core
 {
@@ -12,12 +13,14 @@ namespace Witherspoon.Game.Core
         [SerializeField] private int goldPerWave = 50;
         [SerializeField] private float passiveIncomeInterval = 5f;
         [SerializeField] private int passiveIncomeAmount = 5;
+        [SerializeField] private EssenceInventory essenceInventory;
 
         private int _currentGold;
         private float _incomeTimer;
 
         public System.Action<int> OnGoldChanged;
         public int CurrentGold => _currentGold;
+        public EssenceInventory Essences => essenceInventory;
 
         private void OnEnable()
         {
@@ -69,6 +72,12 @@ namespace Witherspoon.Game.Core
         {
             if (enemy?.Definition == null) return;
             AddGold(enemy.Definition.GoldReward);
+            var drop = enemy.Definition.DropEssence;
+            var amount = enemy.Definition.EssenceAmount;
+            if (drop != null && amount > 0 && essenceInventory != null)
+            {
+                essenceInventory.AddEssence(drop, amount);
+            }
         }
 
         private void BroadcastGold()

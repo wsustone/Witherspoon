@@ -15,6 +15,10 @@ namespace Witherspoon.Game.Data
             [SerializeField] private float damageMultiplier = 1.25f;
             [SerializeField] private float slowMultiplier = 1f;
             [SerializeField] private float upgradeTime = 2.5f;
+            [SerializeField] private EssenceDefinition requiredEssence;
+            [SerializeField] private int requiredEssenceAmount;
+            [SerializeField] private EssenceDefinition requiredEssenceAlt;
+            [SerializeField] private int requiredEssenceAltAmount;
 
             public string TierName => tierName;
             public int Cost => cost;
@@ -23,6 +27,10 @@ namespace Witherspoon.Game.Data
             public float DamageMultiplier => damageMultiplier;
             public float SlowMultiplier => slowMultiplier;
             public float UpgradeTime => Mathf.Max(0f, upgradeTime);
+            public EssenceDefinition RequiredEssence => requiredEssence;
+            public int RequiredEssenceAmount => requiredEssenceAmount;
+            public EssenceDefinition RequiredEssenceAlt => requiredEssenceAlt;
+            public int RequiredEssenceAltAmount => requiredEssenceAltAmount;
         }
 
         public enum AttackStyle
@@ -67,6 +75,12 @@ namespace Witherspoon.Game.Data
         [SerializeField] private float damage = 25f;
         [SerializeField] private TowerUpgradeTier[] upgradeTiers = System.Array.Empty<TowerUpgradeTier>();
 
+        [Header("Fusion (Optional Either-Or Essence Requirement)")]
+        [SerializeField] private EssenceDefinition fusionRequiredEssence;
+        [SerializeField] private int fusionRequiredEssenceAmount;
+        [SerializeField] private EssenceDefinition fusionRequiredEssenceAlt;
+        [SerializeField] private int fusionRequiredEssenceAltAmount;
+
         [Header("Projectile")]
         [SerializeField] private GameObject projectilePrefab;
         [SerializeField] private float projectileSpeed = 8f;
@@ -103,5 +117,9 @@ namespace Witherspoon.Game.Data
         public float SlowPercent => (!overrideSlowPercent && archetype != null) ? archetype.SlowPercent : slowPercent;
         public float EffectDuration => (!overrideEffectDuration && archetype != null) ? archetype.EffectDuration : effectDuration;
         public TowerUpgradeTier[] UpgradeTiers => upgradeTiers;
+        public EssenceDefinition FusionRequiredEssence => fusionRequiredEssence;
+        public int FusionRequiredEssenceAmount => fusionRequiredEssenceAmount;
+        public EssenceDefinition FusionRequiredEssenceAlt => fusionRequiredEssenceAlt;
+        public int FusionRequiredEssenceAltAmount => fusionRequiredEssenceAltAmount;
     }
 }

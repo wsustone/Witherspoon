@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df931f821aef24d6d89706672903f984, type: 3}
+  m_Name: EnemyFamilyLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.EnemyFamilyLibrary
+  defaultEnemy: {fileID: 0}
+  shades: {fileID: 11400000, guid: 7e29f960f20d9427da99c51c4cb5b1f3, type: 2}
+  glimmers: {fileID: 11400000, guid: bf67e075a5eeb477c87133a2ef40d43c, type: 2}
+  husks: {fileID: 11400000, guid: 9e829fdc91c624d738cf1b48e31bf330, type: 2}
+  nightglass: {fileID: 11400000, guid: 8a78c0b8e4b9a42b28f930bb7004717c, type: 2}
+  dreadbound: {fileID: 11400000, guid: 747af3effc5fc43ca8a96967e4c9675a, type: 2}
+  riftrunner: {fileID: 11400000, guid: d6f15bb7202754bd481aac95f1df4138, type: 2}
+  shardThief: {fileID: 11400000, guid: 4cdd963a2267a4ffc850381e4b5ec016, type: 2}
+  anchorBreaker: {fileID: 11400000, guid: 5acaee33f7b0a45458643275533da3d5, type: 2}
+  pathforger: {fileID: 11400000, guid: 0181e877c8dfd47e3838dfe689f344b8, type: 2}
+  nightmareOfDread: {fileID: 11400000, guid: c7e6253a8897e4729bd5715a473728d4, type: 2}
+  nightmareOfStagnation: {fileID: 11400000, guid: e32829cfc099c430c929db254357fc02, type: 2}
+  nightmareOfRuin: {fileID: 11400000, guid: 680058fd9bf814be8b0397edfa5461c1, type: 2}
+  nightmareOfDiscord: {fileID: 11400000, guid: 49b05011e7f5b43859e8bffab378f663, type: 2}

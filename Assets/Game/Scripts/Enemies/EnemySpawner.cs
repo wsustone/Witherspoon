@@ -10,7 +10,22 @@ namespace Witherspoon.Game.Enemies
     /// </summary>
     public class EnemySpawner : MonoBehaviour
     {
+        public readonly struct WaveSpawnConfig
+        {
+            public WaveSpawnConfig(EnemyDefinition forcedEnemy, int? enemyCountOverride, float? spawnIntervalOverride)
+            {
+                ForcedEnemy = forcedEnemy;
+                EnemyCountOverride = enemyCountOverride;
+                SpawnIntervalOverride = spawnIntervalOverride;
+            }
+
+            public EnemyDefinition ForcedEnemy { get; }
+            public int? EnemyCountOverride { get; }
+            public float? SpawnIntervalOverride { get; }
+        }
+
         [SerializeField] private EnemyDefinition defaultEnemy;
+        [SerializeField] private EnemyFamilyLibrary enemyFamilies;
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private Transform goalPoint;
 
@@ -26,13 +41,129 @@ namespace Witherspoon.Game.Enemies
         [SerializeField] private float pathWidth = 0.12f;
         [SerializeField] private Color pathColor = new Color(0.4f, 0.9f, 1f, 0.6f);
 
-        public void SpawnWave(int waveNumber, GridManager grid)
+        private const float DefaultSpawnSpacing = 0.75f;
+        private Transform _spawnOverride;
+        private Transform _goalOverride;
+
+        public void SpawnWave(int waveNumber, GridManager grid, WaveSpawnConfig? config = null)
         {
-            int count = Mathf.Clamp(3 + waveNumber, 3, 25);
+            var activeSpawn = GetActiveSpawnAnchor();
+            var activeGoal = GetActiveGoalAnchor();
+            if (activeSpawn == null || activeGoal == null)
+            {
+                Debug.LogWarning("EnemySpawner cannot spawn wave because spawn or goal anchor is missing.");
+                return;
+            }
+
+            int count = config?.EnemyCountOverride ?? Mathf.Clamp(3 + waveNumber, 3, 25);
+            float spacing = Mathf.Max(0.05f, config?.SpawnIntervalOverride ?? DefaultSpawnSpacing);
+            var waveEnemy = SelectSpawnableEnemy(config?.ForcedEnemy, waveNumber);
+            if (!IsSpawnable(waveEnemy))
+            {
+                Debug.LogWarning($"Wave {waveNumber} could not find a spawnable enemy definition (missing prefab).");
+                return;
+            }
+            Vector3 startPos = activeSpawn.position;
+            Vector3 goalPos = activeGoal.position;
             for (int i = 0; i < count; i++)
             {
-                SpawnEnemy(defaultEnemy, spawnPoint.position, goalPoint.position, i * 0.75f);
+                SpawnEnemy(waveEnemy, startPos, goalPos, i * spacing);
             }
+        }
+
+        public void SetAnchorOverride(Transform spawnOverride, Transform goalOverride)
+        {
+            _spawnOverride = spawnOverride != null ? spawnOverride : _spawnOverride;
+            _goalOverride = goalOverride != null ? goalOverride : _goalOverride;
+            RefreshAnchorState();
+        }
+
+        public void ClearAnchorOverride()
+        {
+            _spawnOverride = null;
+            _goalOverride = null;
+            RefreshAnchorState();
+        }
+
+        private void RefreshAnchorState()
+        {
+            EnsureMarkers();
+            UpdateMarkerTransforms();
+            _pathDirty = true;
+        }
+
+        private Transform GetActiveSpawnAnchor() => _spawnOverride != null ? _spawnOverride : spawnPoint;
+        private Transform GetActiveGoalAnchor() => _goalOverride != null ? _goalOverride : goalPoint;
+
+        private EnemyDefinition SelectSpawnableEnemy(EnemyDefinition forced, int waveNumber)
+        {
+            if (IsSpawnable(forced)) return forced;
+
+            var resolved = ResolveEnemyForWave(waveNumber);
+            if (IsSpawnable(resolved)) return resolved;
+
+            if (IsSpawnable(defaultEnemy)) return defaultEnemy;
+            if (enemyFamilies != null && IsSpawnable(enemyFamilies.DefaultEnemy))
+            {
+                return enemyFamilies.DefaultEnemy;
+            }
+
+            return null;
+        }
+
+        private static bool IsSpawnable(EnemyDefinition candidate) =>
+            candidate != null && candidate.Prefab != null;
+
+        private EnemyDefinition ResolveEnemyForWave(int waveNumber)
+        {
+            if (enemyFamilies == null)
+            {
+                return IsSpawnable(defaultEnemy) ? defaultEnemy : null;
+            }
+
+            EnemyDefinition FirstSpawnable(params EnemyDefinition[] candidates)
+            {
+                foreach (var candidate in candidates)
+                {
+                    if (IsSpawnable(candidate)) return candidate;
+                }
+                return null;
+            }
+
+            EnemyDefinition PickFamilyEnemy()
+            {
+                if (waveNumber <= 2)
+                {
+                    return FirstSpawnable(enemyFamilies.Shades, enemyFamilies.DefaultEnemy);
+                }
+                if (waveNumber <= 4)
+                {
+                    return FirstSpawnable(enemyFamilies.Glimmers, enemyFamilies.Shades, enemyFamilies.DefaultEnemy);
+                }
+                if (waveNumber <= 6)
+                {
+                    return FirstSpawnable(enemyFamilies.Husks, enemyFamilies.Glimmers, enemyFamilies.DefaultEnemy);
+                }
+                if (waveNumber % 7 == 0)
+                {
+                    return FirstSpawnable(enemyFamilies.ShardThief, enemyFamilies.AnchorBreaker, enemyFamilies.Pathforger, enemyFamilies.DefaultEnemy);
+                }
+                if (waveNumber % 5 == 0)
+                {
+                    return FirstSpawnable(enemyFamilies.Nightglass, enemyFamilies.Dreadbound, enemyFamilies.Riftrunner, enemyFamilies.DefaultEnemy);
+                }
+                if (waveNumber >= 15 && waveNumber % 10 == 0)
+                {
+                    return FirstSpawnable(enemyFamilies.NightmareOfDread, enemyFamilies.NightmareOfStagnation, enemyFamilies.NightmareOfRuin, enemyFamilies.NightmareOfDiscord, enemyFamilies.DefaultEnemy);
+                }
+
+                return FirstSpawnable(enemyFamilies.Shades, enemyFamilies.Glimmers, enemyFamilies.Husks, enemyFamilies.DefaultEnemy);
+            }
+
+            var pick = PickFamilyEnemy();
+            if (pick != null) return pick;
+
+            return IsSpawnable(defaultEnemy) ? defaultEnemy : null;
         }
 
         private void SpawnEnemy(EnemyDefinition definition, Vector3 start, Vector3 goal, float delay)
@@ -126,13 +257,15 @@ namespace Witherspoon.Game.Enemies
         private void EnsureMarkers()
         {
             if (!showMarkers) return;
-            if (spawnPoint != null)
+            var activeSpawn = GetActiveSpawnAnchor();
+            if (activeSpawn != null)
             {
-                _startMarker = CreateOrUpdateMarker(_startMarker, spawnPoint, "CreepStartMarker", startColor);
+                _startMarker = CreateOrUpdateMarker(_startMarker, activeSpawn, "CreepStartMarker", startColor);
             }
-            if (goalPoint != null)
+            var activeGoal = GetActiveGoalAnchor();
+            if (activeGoal != null)
             {
-                _goalMarker = CreateOrUpdateMarker(_goalMarker, goalPoint, "CreepGoalMarker", goalColor);
+                _goalMarker = CreateOrUpdateMarker(_goalMarker, activeGoal, "CreepGoalMarker", goalColor);
             }
         }
 
@@ -181,9 +314,11 @@ namespace Witherspoon.Game.Enemies
 
         private void TrackAnchorMovement()
         {
-            if (spawnPoint == null || goalPoint == null) return;
-            Vector3 start = spawnPoint.position;
-            Vector3 goal = goalPoint.position;
+            var activeSpawn = GetActiveSpawnAnchor();
+            var activeGoal = GetActiveGoalAnchor();
+            if (activeSpawn == null || activeGoal == null) return;
+            Vector3 start = activeSpawn.position;
+            Vector3 goal = activeGoal.position;
             if ((start - _lastStartPosition).sqrMagnitude > 0.001f ||
                 (goal - _lastGoalPosition).sqrMagnitude > 0.001f)
             {
@@ -196,26 +331,30 @@ namespace Witherspoon.Game.Enemies
         private void UpdateMarkerTransforms()
         {
             if (!showMarkers) return;
-            if (_startMarker != null && spawnPoint != null)
+            var activeSpawn = GetActiveSpawnAnchor();
+            if (_startMarker != null && activeSpawn != null)
             {
-                CreateOrUpdateMarker(_startMarker, spawnPoint, _startMarker.name, startColor);
+                CreateOrUpdateMarker(_startMarker, activeSpawn, _startMarker.name, startColor);
             }
-            if (_goalMarker != null && goalPoint != null)
+            var activeGoal = GetActiveGoalAnchor();
+            if (_goalMarker != null && activeGoal != null)
             {
-                CreateOrUpdateMarker(_goalMarker, goalPoint, _goalMarker.name, goalColor);
+                CreateOrUpdateMarker(_goalMarker, activeGoal, _goalMarker.name, goalColor);
             }
         }
 
         private void RecalculatePathPreview()
         {
             _pathDirty = false;
-            if (!showPathPreview || spawnPoint == null || goalPoint == null) return;
+            var activeSpawn = GetActiveSpawnAnchor();
+            var activeGoal = GetActiveGoalAnchor();
+            if (!showPathPreview || activeSpawn == null || activeGoal == null) return;
 
             EnsurePathRenderer();
             if (_pathPreviewRenderer == null) return;
 
-            Vector3 start = spawnPoint.position;
-            Vector3 goal = goalPoint.position;
+            Vector3 start = activeSpawn.position;
+            Vector3 goal = activeGoal.position;
 
             _gridPathBuffer.Clear();
             bool found = _attachedGrid != null && _attachedGrid.TryFindPath(start, goal, _gridPathBuffer);

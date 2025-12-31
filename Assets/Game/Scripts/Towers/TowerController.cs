@@ -33,6 +33,7 @@ namespace Witherspoon.Game.Towers
         private int _upgradeTier;
         private float _upgradeTimer;
         private bool _isUpgrading;
+        private bool _isMorphing;
         private float _currentRange;
         private float _currentFireRate;
         private float _currentDamage;
@@ -84,7 +85,15 @@ namespace Witherspoon.Game.Towers
                 _upgradeTimer -= Time.deltaTime;
                 if (_upgradeTimer <= 0f)
                 {
-                    CompleteUpgrade();
+                    if (_isMorphing)
+                    {
+                        _isMorphing = false;
+                        _isUpgrading = false;
+                    }
+                    else
+                    {
+                        CompleteUpgrade();
+                    }
                 }
                 return;
             }
@@ -434,6 +443,45 @@ namespace Witherspoon.Game.Towers
                 _currentRange *= tier.RangeMultiplier;
                 _currentFireRate *= tier.FireRateMultiplier;
                 _currentDamage *= tier.DamageMultiplier;
+            }
+        }
+
+        public void TransformTo(TowerDefinition newDefinition)
+        {
+            if (newDefinition == null) return;
+            definition = newDefinition;
+            _upgradeTier = 0;
+            _upgradeTimer = 0f;
+            _isUpgrading = false;
+            _isMorphing = false;
+            CacheBaseStats();
+            RefreshPlaceholderColors();
+        }
+
+        public void BeginMorph(float seconds)
+        {
+            _isMorphing = true;
+            _isUpgrading = true;
+            _upgradeTimer = Mathf.Max(0f, seconds);
+        }
+
+        private void RefreshPlaceholderColors()
+        {
+            var renderers = GetComponentsInChildren<MeshRenderer>();
+            if (renderers == null || renderers.Length == 0) return;
+            Color color = definition != null ? definition.HighlightColor : new Color(0.2f, 0.9f, 1f, 0.7f);
+            Color glowColor = definition != null ? definition.AttackColor : new Color(1f, 0.85f, 0.35f);
+
+            foreach (var r in renderers)
+            {
+                if (r.gameObject.name.Contains("TowerBody3D"))
+                {
+                    if (r.material != null) r.material.color = color;
+                }
+                else if (r.gameObject.name.Contains("TowerFocus3D"))
+                {
+                    if (r.material != null) r.material.color = glowColor;
+                }
             }
         }
     }

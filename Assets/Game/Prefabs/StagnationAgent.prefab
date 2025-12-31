@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3036107118831994672}
   - component: {fileID: 3002126579560956931}
   m_Layer: 0
-  m_Name: EnemyAgent
+  m_Name: StagnationAgent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,4 +104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c0f84cfd8acd41f797dfb06a6c107d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Enemies.EnemyAgent
-  definition: {fileID: 11400000, guid: bf67e075a5eeb477c87133a2ef40d43c, type: 2}
+  definition: {fileID: 11400000, guid: e32829cfc099c430c929db254357fc02, type: 2}
+  usePlaceholderMesh: 1
+  placeholderRadius: 0.35
+  placeholderHeight: 1.2
+  placeholderAccentHeight: 0.25

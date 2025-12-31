@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf865499a0124f08b4eb61e171a09da, type: 3}
+  m_Name: DireHowlRecipe
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.FusionRecipe
+  inputLeft: {fileID: 11400000, guid: c889124013a6f40d18f2a7ec8cdef549, type: 2}
+  inputRight: {fileID: 11400000, guid: 9901ad74a19854ceebaef69fd78d8eb4, type: 2}
+  requiredEssence: {fileID: 11400000, guid: d3b5b3ee2b11142a6b4073c6c7109dfe, type: 2}
+  requiredAmount: 1
+  resultDefinition: {fileID: 11400000, guid: 043aa4b44b1a1456fa2acb8d25eed2ff, type: 2}

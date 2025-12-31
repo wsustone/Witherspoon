@@ -18,6 +18,10 @@ namespace Witherspoon.Game.Data
         [SerializeField] private float moveSpeed = 1.5f;
         [SerializeField] private int goldReward = 10;
 
+        [Header("Drops")]
+        [SerializeField] private EssenceDefinition dropEssence;
+        [SerializeField] private int essenceAmount;
+
         public string EnemyName => enemyName;
         public Sprite Portrait => portrait;
         public Color FactionColor => factionColor;
@@ -25,5 +29,7 @@ namespace Witherspoon.Game.Data
         public float BaseHealth => baseHealth;
         public float MoveSpeed => moveSpeed;
         public int GoldReward => goldReward;
+        public EssenceDefinition DropEssence => dropEssence;
+        public int EssenceAmount => essenceAmount;
     }
 }
