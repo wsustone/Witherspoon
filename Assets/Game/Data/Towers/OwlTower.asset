@@ -37,39 +37,43 @@ MonoBehaviour:
   fireRate: 1.2
   damage: 25
   upgradeTiers:
-  - tierName: 
+  - tierName: Owl 2
     cost: 300
-    rangeMultiplier: 0
-    fireRateMultiplier: 0
-    damageMultiplier: 0
+    rangeMultiplier: 1.1
+    fireRateMultiplier: 1.05
+    damageMultiplier: 1.1
     slowMultiplier: 0
     upgradeTime: 5
     requiredEssence: {fileID: 0}
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
-  - tierName: 
+  - tierName: Owl 3
     cost: 900
-    rangeMultiplier: 0
-    fireRateMultiplier: 0
-    damageMultiplier: 0
+    rangeMultiplier: 1.1
+    fireRateMultiplier: 1.05
+    damageMultiplier: 1.1
     slowMultiplier: 0
     upgradeTime: 10
     requiredEssence: {fileID: 0}
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
-  - tierName: 
+  - tierName: Owl 4
     cost: 2500
-    rangeMultiplier: 0
-    fireRateMultiplier: 0
-    damageMultiplier: 0
+    rangeMultiplier: 1.1
+    fireRateMultiplier: 1.1
+    damageMultiplier: 1.25
     slowMultiplier: 0
     upgradeTime: 15
     requiredEssence: {fileID: 0}
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
+  fusionRequiredEssence: {fileID: 0}
+  fusionRequiredEssenceAmount: 0
+  fusionRequiredEssenceAlt: {fileID: 0}
+  fusionRequiredEssenceAltAmount: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 8
   hitsInstantly: 0

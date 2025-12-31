@@ -41,6 +41,9 @@ namespace Witherspoon.Game.Enemies
         [SerializeField] private float pathWidth = 0.12f;
         [SerializeField] private Color pathColor = new Color(0.4f, 0.9f, 1f, 0.6f);
 
+        [Header("Debug")]
+        [SerializeField] private bool debugWaveSelection = false;
+
         private const float DefaultSpawnSpacing = 0.75f;
         private Transform _spawnOverride;
         private Transform _goalOverride;
@@ -62,6 +65,10 @@ namespace Witherspoon.Game.Enemies
             {
                 Debug.LogWarning($"Wave {waveNumber} could not find a spawnable enemy definition (missing prefab).");
                 return;
+            }
+            if (debugWaveSelection && waveEnemy != null)
+            {
+                Debug.Log($"[EnemySpawner] Wave {waveNumber} -> {waveEnemy.EnemyName}", this);
             }
             Vector3 startPos = activeSpawn.position;
             Vector3 goalPos = activeGoal.position;
@@ -144,17 +151,20 @@ namespace Witherspoon.Game.Enemies
                 {
                     return FirstSpawnable(enemyFamilies.Husks, enemyFamilies.Glimmers, enemyFamilies.DefaultEnemy);
                 }
+                // Prioritize boss waves first so they are not shadowed by other modulo checks
+                if (waveNumber >= 10 && waveNumber % 10 == 0)
+                {
+                    return FirstSpawnable(enemyFamilies.NightmareOfDread, enemyFamilies.NightmareOfStagnation, enemyFamilies.NightmareOfRuin, enemyFamilies.NightmareOfDiscord, enemyFamilies.DefaultEnemy);
+                }
+                // Objective waves (anchor/shard/path) every 7th wave; prefer Anchor Breaker so Hunger Essence appears reliably
                 if (waveNumber % 7 == 0)
                 {
-                    return FirstSpawnable(enemyFamilies.ShardThief, enemyFamilies.AnchorBreaker, enemyFamilies.Pathforger, enemyFamilies.DefaultEnemy);
+                    return FirstSpawnable(enemyFamilies.AnchorBreaker, enemyFamilies.ShardThief, enemyFamilies.Pathforger, enemyFamilies.DefaultEnemy);
                 }
+                // Elite waves every 5th wave otherwise
                 if (waveNumber % 5 == 0)
                 {
                     return FirstSpawnable(enemyFamilies.Nightglass, enemyFamilies.Dreadbound, enemyFamilies.Riftrunner, enemyFamilies.DefaultEnemy);
-                }
-                if (waveNumber >= 15 && waveNumber % 10 == 0)
-                {
-                    return FirstSpawnable(enemyFamilies.NightmareOfDread, enemyFamilies.NightmareOfStagnation, enemyFamilies.NightmareOfRuin, enemyFamilies.NightmareOfDiscord, enemyFamilies.DefaultEnemy);
                 }
 
                 return FirstSpawnable(enemyFamilies.Shades, enemyFamilies.Glimmers, enemyFamilies.Husks, enemyFamilies.DefaultEnemy);

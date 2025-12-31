@@ -15,8 +15,8 @@ namespace Witherspoon.Game.UI
 
         [Header("Config")] 
         [SerializeField] private List<EssenceDefinition> essencesToShow = new();
-        [SerializeField] private Vector2 itemSize = new Vector2(28, 28);
-        [SerializeField] private float spacing = 8f;
+        [SerializeField] private Vector2 iconSize = new Vector2(20, 20);
+        [SerializeField] private float rowSpacing = 4f;
         [SerializeField] private Color textColor = new Color(1f,1f,1f,0.92f);
 
         private readonly Dictionary<EssenceDefinition, TMP_Text> _labels = new();
@@ -46,16 +46,23 @@ namespace Witherspoon.Game.UI
 
         private void EnsureContainer()
         {
-            if (container != null) return;
-            var go = new GameObject("EssenceHUD", typeof(RectTransform));
-            go.transform.SetParent(transform, false);
-            container = go.GetComponent<RectTransform>();
-            var horiz = go.AddComponent<HorizontalLayoutGroup>();
-            horiz.childAlignment = TextAnchor.MiddleLeft;
-            horiz.spacing = spacing;
-            horiz.childForceExpandHeight = false;
-            horiz.childForceExpandWidth = false;
-            var fitter = go.AddComponent<ContentSizeFitter>();
+            if (container == null)
+            {
+                var go = new GameObject("EssenceHUD", typeof(RectTransform));
+                go.transform.SetParent(transform, false);
+                container = go.GetComponent<RectTransform>();
+            }
+
+            // Ensure vertical list layout on the container
+            var vertical = container.GetComponent<VerticalLayoutGroup>();
+            if (vertical == null) vertical = container.gameObject.AddComponent<VerticalLayoutGroup>();
+            vertical.childAlignment = TextAnchor.UpperLeft;
+            vertical.spacing = rowSpacing;
+            vertical.childForceExpandHeight = false;
+            vertical.childForceExpandWidth = false;
+
+            var fitter = container.GetComponent<ContentSizeFitter>();
+            if (fitter == null) fitter = container.gameObject.AddComponent<ContentSizeFitter>();
             fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
@@ -72,32 +79,29 @@ namespace Witherspoon.Game.UI
             foreach (var essence in essencesToShow)
             {
                 if (essence == null) continue;
-                var item = new GameObject(essence.DisplayName, typeof(RectTransform));
-                item.transform.SetParent(container, false);
-                var itemRect = item.GetComponent<RectTransform>();
-                itemRect.sizeDelta = itemSize;
+                var row = new GameObject(essence.DisplayName, typeof(RectTransform));
+                row.transform.SetParent(container, false);
+                var rowRect = row.GetComponent<RectTransform>();
+                var hl = row.AddComponent<HorizontalLayoutGroup>();
+                hl.childAlignment = TextAnchor.MiddleLeft;
+                hl.spacing = 6f;
+                hl.childForceExpandHeight = false;
+                hl.childForceExpandWidth = false;
 
-                // Icon
+                // Icon (optional)
                 var iconGo = new GameObject("Icon", typeof(RectTransform));
-                iconGo.transform.SetParent(item.transform, false);
-                var iconRect = iconGo.GetComponent<RectTransform>();
-                iconRect.anchorMin = new Vector2(0f, 0f);
-                iconRect.anchorMax = new Vector2(0f, 1f);
-                iconRect.sizeDelta = new Vector2(itemSize.y, 0f);
+                iconGo.transform.SetParent(row.transform, false);
                 var iconImage = iconGo.AddComponent<Image>();
                 iconImage.sprite = essence.Icon;
                 iconImage.color = Color.white;
+                var iconRect = iconGo.GetComponent<RectTransform>();
+                iconRect.sizeDelta = iconSize;
 
-                // Label
+                // Label "Name: count"
                 var labelGo = new GameObject("Label", typeof(RectTransform));
-                labelGo.transform.SetParent(item.transform, false);
-                var labelRect = labelGo.GetComponent<RectTransform>();
-                labelRect.anchorMin = new Vector2(0f, 0f);
-                labelRect.anchorMax = new Vector2(1f, 1f);
-                labelRect.offsetMin = new Vector2(itemSize.y + 4f, 0f);
-                labelRect.offsetMax = Vector2.zero;
+                labelGo.transform.SetParent(row.transform, false);
                 var label = labelGo.AddComponent<TextMeshProUGUI>();
-                label.text = "0";
+                label.text = essence.DisplayName + ": 0";
                 label.color = textColor;
                 label.fontSize = 18f;
                 label.alignment = TextAlignmentOptions.MidlineLeft;
@@ -117,7 +121,8 @@ namespace Witherspoon.Game.UI
             foreach (var kvp in _labels)
             {
                 int count = _inv.GetCount(kvp.Key);
-                kvp.Value.text = count.ToString();
+                var ess = kvp.Key;
+                kvp.Value.text = (ess != null ? ess.DisplayName : "Essence") + ": " + count.ToString();
             }
         }
 

@@ -37,6 +37,7 @@ namespace Witherspoon.Game.Towers
         private float _currentRange;
         private float _currentFireRate;
         private float _currentDamage;
+        private float _currentSlowPercent;
 
         public TowerDefinition Definition => definition;
         public int KillCount => _kills;
@@ -46,6 +47,7 @@ namespace Witherspoon.Game.Towers
         public float CurrentRange => _currentRange;
         public float CurrentFireRate => _currentFireRate;
         public float CurrentDamage => _currentDamage;
+        public float CurrentSlowPercent => _currentSlowPercent;
         public TowerDefinition.TowerUpgradeTier NextTier => definition != null && definition.UpgradeTiers != null && _upgradeTier < definition.UpgradeTiers.Length ? definition.UpgradeTiers[_upgradeTier] : null;
 
         private void Start()
@@ -282,7 +284,7 @@ namespace Witherspoon.Game.Towers
                 float distSq = (enemy.transform.position - origin).sqrMagnitude;
                 if (distSq <= radiusSq)
                 {
-                    enemy.ApplySlow(definition.SlowPercent, definition.EffectDuration);
+                    enemy.ApplySlow(_currentSlowPercent, definition.EffectDuration);
                 }
             }
         }
@@ -310,12 +312,12 @@ namespace Witherspoon.Game.Towers
             }
             if (wall.TryGetComponent(out SlowZone zone))
             {
-                zone.Initialize(definition.SlowPercent, definition.EffectDuration);
+                zone.Initialize(_currentSlowPercent, definition.EffectDuration);
             }
             else
             {
                 var newZone = wall.AddComponent<SlowZone>();
-                newZone.Initialize(definition.SlowPercent, definition.EffectDuration);
+                newZone.Initialize(_currentSlowPercent, definition.EffectDuration);
             }
         }
 
@@ -388,12 +390,14 @@ namespace Witherspoon.Game.Towers
                 _currentRange = 3f;
                 _currentFireRate = 1f;
                 _currentDamage = 10f;
+                _currentSlowPercent = 0.1f;
                 return;
             }
 
             _currentRange = definition.Range;
             _currentFireRate = definition.FireRate;
             _currentDamage = definition.Damage;
+            _currentSlowPercent = Mathf.Clamp01(definition.SlowPercent);
         }
 
         public bool CanUpgrade()
@@ -443,6 +447,8 @@ namespace Witherspoon.Game.Towers
                 _currentRange *= tier.RangeMultiplier;
                 _currentFireRate *= tier.FireRateMultiplier;
                 _currentDamage *= tier.DamageMultiplier;
+                _currentSlowPercent *= tier.SlowMultiplier;
+                _currentSlowPercent = Mathf.Clamp01(_currentSlowPercent);
             }
         }
 
