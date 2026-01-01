@@ -33,9 +33,27 @@ Assets/TextMesh\ Pro/Examples\ &\ Extras/
 *.opendb
 *.VC.db
 
+# Compiled binaries and libraries
+*.dll
+*.exe
+*.so
+*.dylib
+*.a
+*.lib
+*.o
+*.obj
+
+# Build artifacts
+*.bundle
+*.apk
+*.aab
+*.ipa
+
 # OS metadata
 .DS_Store
 Thumbs.db
 
 # Crash reports
 sysinfo.txt
+*.log
+mythic.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll
