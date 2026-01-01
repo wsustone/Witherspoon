@@ -48,6 +48,7 @@ Assets/TextMesh\ Pro/Examples\ &\ Extras/
 *.apk
 *.aab
 *.ipa
+mythic.app/
 
 # OS metadata
 .DS_Store
@@ -56,4 +57,3 @@ Thumbs.db
 # Crash reports
 sysinfo.txt
 *.log
-mythic.app/Contents/Resources/Data/Managed/Assembly-CSharp.dll

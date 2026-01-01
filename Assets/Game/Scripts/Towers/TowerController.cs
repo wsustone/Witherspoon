@@ -16,7 +16,7 @@ namespace Witherspoon.Game.Towers
         [SerializeField] private Transform firePoint;
         [SerializeField] private LineRenderer beamRenderer;
         [SerializeField] private SpriteRenderer coneRenderer;
-        [SerializeField] private float fxDuration = 0.12f;
+        [SerializeField] private float fxDuration = 0.3f;
         [Header("Placeholder 3D Visuals")]
         [SerializeField] private bool usePlaceholderMesh = true;
         [SerializeField] private float placeholderRadius = 0.45f;
@@ -741,6 +741,47 @@ namespace Witherspoon.Game.Towers
             _isRepairing = false;
             CacheBaseStats();
             RefreshPlaceholderColors();
+            
+            // Ensure beam renderer exists for beam-type towers
+            if (definition.AttackMode == TowerDefinition.AttackStyle.Beam)
+            {
+                if (beamRenderer == null)
+                {
+                    beamRenderer = GetComponent<LineRenderer>();
+                }
+                
+                if (beamRenderer == null)
+                {
+                    beamRenderer = gameObject.AddComponent<LineRenderer>();
+                    beamRenderer.useWorldSpace = true;
+                    beamRenderer.widthMultiplier = 0.2f;
+                    beamRenderer.numCapVertices = 4;
+                    beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                }
+                
+                // Ensure the material is set up properly
+                if (beamRenderer.material == null || beamRenderer.material.shader == null)
+                {
+                    beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                }
+                
+                beamRenderer.enabled = false;
+            }
+
+            // Ensure cone renderer exists for cone-type towers
+            if (definition.AttackMode == TowerDefinition.AttackStyle.Cone && coneRenderer == null)
+            {
+                coneRenderer = GetComponent<SpriteRenderer>();
+                if (coneRenderer == null)
+                {
+                    var coneObj = new GameObject("ConeRenderer");
+                    coneObj.transform.SetParent(transform, false);
+                    coneRenderer = coneObj.AddComponent<SpriteRenderer>();
+                    coneRenderer.sprite = Resources.Load<Sprite>("Sprites/cone") ?? Resources.Load<Sprite>("Sprites/Circle");
+                    coneRenderer.color = definition.AttackColor;
+                }
+                coneRenderer.enabled = false;
+            }
         }
 
         public void BeginMorph(float seconds)
