@@ -147,6 +147,15 @@ namespace Witherspoon.Game.Towers
             var tower = Instantiate(_currentTower.TowerPrefab, spawnPos, Quaternion.identity);
             tower.name = $"{_currentTower.TowerName}_Tower";
 
+            if (tower.TryGetComponent(out TowerController controller))
+            {
+                controller.TransformTo(_currentTower);
+            }
+            else
+            {
+                Debug.LogWarning($"Tower prefab for {_currentTower.TowerName} does not have a TowerController component!");
+            }
+
             gridManager.SetBlocked(_hoverCell, true);
         }
 

@@ -314,12 +314,27 @@ namespace Witherspoon.Game.Enemies
         private static void ApplyMarkerMaterial(GameObject go, Color color)
         {
             if (!go.TryGetComponent(out MeshRenderer renderer)) return;
-            var shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            var mat = new Material(shader)
+            
+            Material material = null;
+            Shader shader = Shader.Find("Standard");
+            if (shader == null) shader = Shader.Find("Diffuse");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
+            
+            if (shader != null)
             {
-                color = color
-            };
-            renderer.material = mat;
+                material = new Material(shader);
+            }
+            else if (renderer.material != null)
+            {
+                material = new Material(renderer.material);
+            }
+            
+            if (material != null)
+            {
+                material.color = color;
+                renderer.material = material;
+            }
+            
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
         }

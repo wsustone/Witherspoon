@@ -25,6 +25,7 @@ namespace Witherspoon.Game.Enemies
 
         private float _health;
         private Vector3 _goal;
+        private Vector3 _spawnPosition;
         private float _spawnDelay;
         private bool _active;
         private float _slowMultiplier = 1f;
@@ -86,6 +87,7 @@ namespace Witherspoon.Game.Enemies
             // Ensure enemies start on the 2D plane (z = 0)
             var pos = transform.position;
             transform.position = new Vector3(pos.x, pos.y, 0f);
+            _spawnPosition = transform.position;
 
             if (_grid != null)
             {
@@ -368,24 +370,15 @@ namespace Witherspoon.Game.Enemies
 
         private void UpdatePathRendererPositions()
         {
-            if (!_pathsVisible)
-            {
-                if (_pathRenderer != null)
-                {
-                    _pathRenderer.gameObject.SetActive(false);
-                }
-                return;
-            }
-
             EnsurePathRenderer();
             if (_pathRenderer == null) return;
 
             _pathPreviewPoints.Clear();
-            _pathPreviewPoints.Add(transform.position);
+            _pathPreviewPoints.Add(_spawnPosition);
 
-            if (_path.Count > 0 && _pathIndex < _path.Count)
+            if (_path.Count > 0)
             {
-                for (int i = _pathIndex; i < _path.Count; i++)
+                for (int i = 0; i < _path.Count; i++)
                 {
                     _pathPreviewPoints.Add(_path[i]);
                 }
@@ -456,9 +449,27 @@ namespace Witherspoon.Game.Enemies
         {
             if (target.TryGetComponent(out MeshRenderer renderer))
             {
-                var material = new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
-                material.color = color;
-                renderer.material = material;
+                Material material = null;
+                
+                Shader shader = Shader.Find("Standard");
+                if (shader == null) shader = Shader.Find("Diffuse");
+                if (shader == null) shader = Shader.Find("Unlit/Color");
+                
+                if (shader != null)
+                {
+                    material = new Material(shader);
+                }
+                else if (renderer.material != null)
+                {
+                    material = new Material(renderer.material);
+                }
+                
+                if (material != null)
+                {
+                    material.color = color;
+                    renderer.material = material;
+                }
+                
                 renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
                 renderer.receiveShadows = true;
             }

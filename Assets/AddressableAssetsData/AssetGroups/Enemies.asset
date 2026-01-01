@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Enemies
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Enemies
+  m_GUID: 07dea6827a25b4947a49f0901bc02362
+  m_SerializeEntries:
+  - m_GUID: 0181e877c8dfd47e3838dfe689f344b8
+    m_Address: Assets/Game/Data/Enemies/Pathforger.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1a9604b36135343b887cf4b043b1999d
+    m_Address: Assets/Game/Prefabs/ShardThiefAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a3085eaa261147cba69f8ff5845dbfe
+    m_Address: Assets/Game/Prefabs/AnchorBreakerAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3bc3e2ddef8ef40f1b1b79dc2a9f59d3
+    m_Address: Assets/Game/Prefabs/StagnationAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49192a81fc5a24096b16ee82f863db7d
+    m_Address: Assets/Game/Data/Enemies/EnemyFamilyLibrary.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 49b05011e7f5b43859e8bffab378f663
+    m_Address: Assets/Game/Data/Enemies/Discord.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4cdd963a2267a4ffc850381e4b5ec016
+    m_Address: Assets/Game/Data/Enemies/Shard Thief.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 500dc45c5b9a543119bbe6af5a240ef0
+    m_Address: Assets/Game/Prefabs/ShadesAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5acaee33f7b0a45458643275533da3d5
+    m_Address: Assets/Game/Data/Enemies/Anchor Breaker.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 680058fd9bf814be8b0397edfa5461c1
+    m_Address: Assets/Game/Data/Enemies/Ruin.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 685f4c77ed62341faa1336b0718334ab
+    m_Address: Assets/Game/Prefabs/GlimmerAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 747af3effc5fc43ca8a96967e4c9675a
+    m_Address: Assets/Game/Data/Enemies/Dreadbound.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7e29f960f20d9427da99c51c4cb5b1f3
+    m_Address: Assets/Game/Data/Enemies/Shades.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a78c0b8e4b9a42b28f930bb7004717c
+    m_Address: Assets/Game/Data/Enemies/Nightglass.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 946614fb2bd0e44bcafb0063fb348c4f
+    m_Address: Assets/Game/Prefabs/PathforgerAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e829fdc91c624d738cf1b48e31bf330
+    m_Address: Assets/Game/Data/Enemies/Husks.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a33e5930f50424cd68569f91907461b6
+    m_Address: Assets/Game/Prefabs/HuskAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf67e075a5eeb477c87133a2ef40d43c
+    m_Address: Assets/Game/Data/Enemies/Glimmers.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c7e6253a8897e4729bd5715a473728d4
+    m_Address: Assets/Game/Data/Enemies/Dread.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c88450001f3ed48469bd879dbe251949
+    m_Address: Assets/Game/Prefabs/RuinAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d55b5376a08a64495b3d1a076f3d1676
+    m_Address: Assets/Game/Prefabs/RiftrunnerAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d6f15bb7202754bd481aac95f1df4138
+    m_Address: Assets/Game/Data/Enemies/Riftrunner.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8d1319317ca64baa8d885c23bc57e43
+    m_Address: Assets/Game/Prefabs/DiscordAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e235e08b335294438b5beb3b502b8385
+    m_Address: Assets/Game/Prefabs/DreadboundAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e32829cfc099c430c929db254357fc02
+    m_Address: Assets/Game/Data/Enemies/Stagnation.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4c86dc2820024a8f82b6be2ed80f093
+    m_Address: Assets/Game/Prefabs/DreadAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fbab4fe58b4da45ad9f8afe0b67aa211
+    m_Address: Assets/Game/Prefabs/NightglassAgent.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8703562f895734e11859c6a039fde8ee, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 3bfd5a9ed017c461a97536dcbbe69ab0, type: 2}
+    - {fileID: 11400000, guid: 5af54cdd7a5e24734b6e0ebda04e0f44, type: 2}

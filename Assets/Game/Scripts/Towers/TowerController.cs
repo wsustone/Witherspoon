@@ -131,6 +131,36 @@ namespace Witherspoon.Game.Towers
                 audioSource.spatialBlend = 0f; // 2D sound for readability
                 audioSource.loop = false;
             }
+
+            // Ensure beam renderer exists for beam-type towers
+            if (definition != null && definition.AttackMode == TowerDefinition.AttackStyle.Beam && beamRenderer == null)
+            {
+                beamRenderer = GetComponent<LineRenderer>();
+                if (beamRenderer == null)
+                {
+                    beamRenderer = gameObject.AddComponent<LineRenderer>();
+                    beamRenderer.useWorldSpace = true;
+                    beamRenderer.widthMultiplier = 0.1f;
+                    beamRenderer.numCapVertices = 2;
+                    beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                }
+                beamRenderer.enabled = false;
+            }
+
+            // Ensure cone renderer exists for cone-type towers
+            if (definition != null && definition.AttackMode == TowerDefinition.AttackStyle.Cone && coneRenderer == null)
+            {
+                coneRenderer = GetComponent<SpriteRenderer>();
+                if (coneRenderer == null)
+                {
+                    var coneObj = new GameObject("ConeRenderer");
+                    coneObj.transform.SetParent(transform, false);
+                    coneRenderer = coneObj.AddComponent<SpriteRenderer>();
+                    coneRenderer.sprite = Resources.Load<Sprite>("Sprites/cone") ?? Resources.Load<Sprite>("Sprites/Circle");
+                    coneRenderer.color = definition.AttackColor;
+                }
+                coneRenderer.enabled = false;
+            }
         }
 
         private void OnEnable()
@@ -438,9 +468,27 @@ namespace Witherspoon.Game.Towers
         {
             if (target.TryGetComponent(out MeshRenderer renderer))
             {
-                var material = new Material(Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard"));
-                material.color = color;
-                renderer.material = material;
+                Material material = null;
+                
+                Shader shader = Shader.Find("Standard");
+                if (shader == null) shader = Shader.Find("Diffuse");
+                if (shader == null) shader = Shader.Find("Unlit/Color");
+                
+                if (shader != null)
+                {
+                    material = new Material(shader);
+                }
+                else if (renderer.material != null)
+                {
+                    material = new Material(renderer.material);
+                }
+                
+                if (material != null)
+                {
+                    material.color = color;
+                    renderer.material = material;
+                }
+                
                 renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
                 renderer.receiveShadows = true;
             }

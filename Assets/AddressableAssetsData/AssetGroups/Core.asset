@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Core
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Core
+  m_GUID: bf647c84d77e94862a8cbe066be68cb7
+  m_SerializeEntries:
+  - m_GUID: 1734278ec55cf44f6b48c10294de8727
+    m_Address: Assets/Game/Data/GameModes/ClassicLives.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33c2ee5c1ba61426ab0795ebda4c7e61
+    m_Address: Assets/Game/Data/Essence/DiscordEssence.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9450b478f55c84b8d9d04254b642a09c
+    m_Address: Assets/Game/Data/Essence/StagnationEssence.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ada4cc934625a4a3eae6bba7f8869988
+    m_Address: Assets/Game/Data/GameModes/NoLeaks.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae9bf6dad7b9145aba023ce3323ff42b
+    m_Address: Assets/Game/Data/Essence/RuinEssence.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d3b5b3ee2b11142a6b4073c6c7109dfe
+    m_Address: Assets/Game/Data/Essence/DreadEssence.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: db10924adcff64b3dbc42d69072c84f2
+    m_Address: Assets/Game/Data/GameModes/Survival.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1ae968ddc36242b6a17c5870a5f7841
+    m_Address: Assets/Game/Data/Essence/HungerEssence.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8703562f895734e11859c6a039fde8ee, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 970f5f1d7c82147cbac2d7b77506eedd, type: 2}
+    - {fileID: 11400000, guid: 1babdb56db6be4772b1b7e9c9a517d6a, type: 2}

@@ -1,0 +1,213 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Towers
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Towers
+  m_GUID: 99a1ea39ef767487caaae15b3e5cbea1
+  m_SerializeEntries:
+  - m_GUID: 02f3496cf6bdc4b1d987945ed62569f3
+    m_Address: Assets/Game/Prefabs/Wall.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 043aa4b44b1a1456fa2acb8d25eed2ff
+    m_Address: Assets/Game/Data/Towers/DireHowlTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 17a9d2a6a9d8a46c98eb22cca6eed838
+    m_Address: Assets/Game/Prefabs/StagTowerController.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1843686d8b50646aab9ccda3afefebda
+    m_Address: Assets/Game/Data/Archetypes/DireHowlArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 222fa1b72ea8c4df3bd3b6ef5595a14c
+    m_Address: Assets/Game/Data/Towers/OwlTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2c735831d88624f42a0859429660a07e
+    m_Address: Assets/Game/Prefabs/BearTowerController.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2ddf7a823f5d5474e9db8d43bf0205c5
+    m_Address: Assets/Game/Prefabs/WolfTowerController.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 320c6194d59d84c89aa0c81b6ea9b003
+    m_Address: Assets/Game/Data/Towers/ObsidianTorrentTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 506b332b5c7c74837a7e34d4e6ba56e7
+    m_Address: Assets/Game/Data/Towers/BearTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5cc78a1f3ed064b608e51075a6ef80bd
+    m_Address: Assets/Game/Prefabs/SerpentTowerContoller.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6918b26162e1d4f7c95b372a849c14d5
+    m_Address: Assets/Game/Data/Towers/MenderTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73f914a2ff87c48988a4d386f030997f
+    m_Address: Assets/Game/Prefabs/MenderTowerController.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76644c0bdfa5541aeb5fd5424c959e60
+    m_Address: Assets/Game/Prefabs/OwlTowerController.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b61887360f554078b1fb34c7564757b
+    m_Address: Assets/Game/Data/Archetypes/OwlArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 834c1cb73c98c46e6a9f9aa6cbb04ac2
+    m_Address: Assets/Game/Data/Archetypes/BulwarkBloomArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a4401fb1b90a4c8d91d8ecb414f4c1c
+    m_Address: Assets/Game/Data/Fusions/TimeGroveRecipe.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 900933842beb54ac4a213655a7e2aa78
+    m_Address: Assets/Game/Data/Fusions/ObsidianTorrentRecipe.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9901ad74a19854ceebaef69fd78d8eb4
+    m_Address: Assets/Game/Data/Archetypes/SerpentArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9cf54afc8b7404b169f253bb5b0af855
+    m_Address: Assets/Game/Data/Archetypes/ObsidianTorrentArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a3493e6e57c854c99bb7707cc35cc68b
+    m_Address: Assets/Game/Prefabs/Square.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a9a5eed81c6064dfea971db62fbdb1e0
+    m_Address: Assets/Game/Data/Towers/StagTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: abc6554f932ba4f0983daef4166c12fc
+    m_Address: Assets/Game/Data/Archetypes/MenderArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: afbc5eb1440cc42f7ae9959fbbed8c5d
+    m_Address: Assets/Game/Data/Towers/SkymarkVolleyTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b53c0cdf5939043e69d0224d93283f2d
+    m_Address: Assets/Game/Prefabs/WolfProjectile.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bccdd4bb07f0e496f8ef2012267e6c6e
+    m_Address: Assets/Game/Data/Archetypes/BearArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c53fb5ae73ba24c94a39c82327bcbaaa
+    m_Address: Assets/Game/Prefabs/Triangle.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c889124013a6f40d18f2a7ec8cdef549
+    m_Address: Assets/Game/Data/Archetypes/WolfArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ce9d28ded240e4b05a8b6b5306c01588
+    m_Address: Assets/Game/Data/Towers/BulwarkBloomTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d162a79721a4b44cab1e5855d67890e6
+    m_Address: Assets/Game/Data/Archetypes/TimeGroveArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7b9e3548d5b44ddd99696540b15ef75
+    m_Address: Assets/Game/Data/Archetypes/StagArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d7c8069f4aecc4da4ad5c2c6168317e9
+    m_Address: Assets/Game/Data/Towers/WolfTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d9fb206dae3bc405d9018e296a62ea7c
+    m_Address: Assets/Game/Data/Towers/TimeGroveTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0227299b67a44ff9aa69a8e1747ecc8
+    m_Address: Assets/Game/Data/Fusions/BulwarkBloomRecipe.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ee1ec9b9e5bc74bb285437c4b73a5a64
+    m_Address: Assets/Game/Data/Fusions/DireHowlRecipe.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ef413e3c52fa8430c973d22d838aabe3
+    m_Address: Assets/Game/Data/Archetypes/SkymarkVolleyArchetype.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f03a90db353414de98fb810cc7ab2659
+    m_Address: Assets/Game/Prefabs/Beam.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f2a0a789ca5894a54b27e1c841d2bb57
+    m_Address: Assets/Game/Data/Fusions/SkymarkVolleyRecipe.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f465f908d9e27490cbbc2d110587b0d7
+    m_Address: Assets/Game/Data/Towers/SerpentTower.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8703562f895734e11859c6a039fde8ee, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 6aee7100f016b43a1bccb0a4a27c6ddc, type: 2}
+    - {fileID: 11400000, guid: 34860d67c63ae4fe3ac5a2ed2eafdcad, type: 2}

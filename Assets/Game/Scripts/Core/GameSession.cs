@@ -32,6 +32,10 @@ namespace Witherspoon.Game.Core
 
         private void Awake()
         {
+            if (GameModeSelection.HasSelection)
+            {
+                gameMode = GameModeSelection.SelectedMode;
+            }
             InitializeState(notifyListeners: false);
         }
 
