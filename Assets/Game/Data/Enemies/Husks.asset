@@ -15,9 +15,29 @@ MonoBehaviour:
   enemyName: Husks
   portrait: {fileID: 0}
   factionColor: {r: 0.49047703, g: 0.6226415, b: 0.6226415, a: 1}
+  uiShowHealth: 1
+  uiShowMoveSpeed: 1
+  uiShowGoldReward: 1
+  uiShowEssenceDrop: 1
+  uiShowArmor: 1
+  uiShowResistances: 1
+  uiShowSlowResist: 1
+  uiShowTraits: 1
   prefab: {fileID: 3002126579560956931, guid: a33e5930f50424cd68569f91907461b6, type: 3}
   baseHealth: 100
   moveSpeed: 1.5
   goldReward: 10
+  armor: 5
+  dmgTakenMulProjectile: 0.75
+  dmgTakenMulBeam: 1.25
+  dmgTakenMulCone: 0.9
+  dmgTakenMulAura: 1
+  dmgTakenMulWall: 1
+  slowEffectiveness: 0.9
+  specialTraits: 
+  canAttackTowers: 0
+  attackRange: 0.75
+  attackDamage: 10
+  attackInterval: 1.2
   dropEssence: {fileID: 0}
   essenceAmount: 0

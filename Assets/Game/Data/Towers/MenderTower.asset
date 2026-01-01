@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fd6a48ae46145d3bb54b1cdf0f0331, type: 3}
+  m_Name: MenderTower
+  m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
+  archetype: {fileID: 11400000, guid: abc6554f932ba4f0983daef4166c12fc, type: 2}
+  overrideTowerName: 0
+  overrideIcon: 0
+  overrideHighlightColor: 0
+  overrideAttackColor: 0
+  overrideRange: 0
+  overrideFireRate: 0
+  overrideDamage: 0
+  overrideProjectileSpeed: 0
+  overrideHitsInstantly: 0
+  overrideProjectileSpawnOffset: 0
+  overrideAttackMode: 0
+  overrideConeAngle: 0
+  overrideConeRotationOffset: 0
+  overrideSlowPercent: 0
+  overrideEffectDuration: 0
+  towerName: Mender
+  icon: {fileID: 0}
+  highlightColor: {r: 1, g: 1, b: 1, a: 1}
+  uiShowRange: 1
+  uiShowFireRate: 0
+  uiShowDamage: 0
+  uiShowSlow: 0
+  uiShowConeAngle: 0
+  uiShowProjectileDetails: 0
+  uiShowKills: 1
+  uiShowRepair: 1
+  towerPrefab: {fileID: 3965421486017390489, guid: 73f914a2ff87c48988a4d386f030997f, type: 3}
+  buildCost: 200
+  range: 5
+  fireRate: 1.2
+  damage: 0
+  upgradeTiers: []
+  fusionRequiredEssence: {fileID: 0}
+  fusionRequiredEssenceAmount: 0
+  fusionRequiredEssenceAlt: {fileID: 0}
+  fusionRequiredEssenceAltAmount: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 8
+  hitsInstantly: 0
+  projectileSpawnOffset: 0.35
+  attackMode: 1
+  attackColor: {r: 1, g: 1, b: 1, a: 1}
+  coneAngle: 40
+  coneRotationOffset: 0
+  slowPercent: 0.1
+  effectDuration: 0.5
+  repairAuraEnabled: 1
+  repairPerSecond: 8
+  repairGoldPerHP: 0.5
+  repairPerAllyCap: 4
+  repairAffectsSelf: 1

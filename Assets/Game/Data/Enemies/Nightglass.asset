@@ -15,9 +15,29 @@ MonoBehaviour:
   enemyName: Nightglass
   portrait: {fileID: 0}
   factionColor: {r: 0, g: 0.3764706, b: 0.18741107, a: 1}
+  uiShowHealth: 1
+  uiShowMoveSpeed: 1
+  uiShowGoldReward: 1
+  uiShowEssenceDrop: 1
+  uiShowArmor: 1
+  uiShowResistances: 1
+  uiShowSlowResist: 1
+  uiShowTraits: 1
   prefab: {fileID: 3002126579560956931, guid: fbab4fe58b4da45ad9f8afe0b67aa211, type: 3}
   baseHealth: 100
   moveSpeed: 1.5
   goldReward: 10
+  armor: 0
+  dmgTakenMulProjectile: 0.9
+  dmgTakenMulBeam: 0.5
+  dmgTakenMulCone: 1
+  dmgTakenMulAura: 1
+  dmgTakenMulWall: 1
+  slowEffectiveness: 1
+  specialTraits: 
+  canAttackTowers: 0
+  attackRange: 0.75
+  attackDamage: 10
+  attackInterval: 1.2
   dropEssence: {fileID: 0}
   essenceAmount: 0

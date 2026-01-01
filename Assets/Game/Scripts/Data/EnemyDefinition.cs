@@ -38,6 +38,12 @@ namespace Witherspoon.Game.Data
         [Tooltip("0 = immune to slows, 1 = full effect")] [Range(0f, 1f)] [SerializeField] private float slowEffectiveness = 1f;
         [SerializeField] private string specialTraits;
 
+        [Header("Tower Aggression")]
+        [SerializeField] private bool canAttackTowers = false;
+        [SerializeField] private float attackRange = 0.75f;
+        [SerializeField] private float attackDamage = 10f;
+        [SerializeField] private float attackInterval = 1.2f;
+
         [Header("Drops")]
         [SerializeField] private EssenceDefinition dropEssence;
         [SerializeField] private int essenceAmount;
@@ -67,5 +73,9 @@ namespace Witherspoon.Game.Data
         public float DmgTakenMulWall => dmgTakenMulWall;
         public float SlowEffectiveness => Mathf.Clamp01(slowEffectiveness);
         public string SpecialTraits => specialTraits;
+        public bool CanAttackTowers => canAttackTowers;
+        public float AttackRange => Mathf.Max(0f, attackRange);
+        public float AttackDamage => Mathf.Max(0f, attackDamage);
+        public float AttackInterval => Mathf.Max(0.05f, attackInterval);
     }
 }

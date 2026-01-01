@@ -31,11 +31,19 @@ MonoBehaviour:
   towerName: Bear
   icon: {fileID: 0}
   highlightColor: {r: 0, g: 0, b: 0, a: 1}
+  uiShowRange: 1
+  uiShowFireRate: 1
+  uiShowDamage: 0
+  uiShowSlow: 1
+  uiShowConeAngle: 0
+  uiShowProjectileDetails: 1
+  uiShowKills: 0
+  uiShowRepair: 1
   towerPrefab: {fileID: 3965421486017390489, guid: 2c735831d88624f42a0859429660a07e, type: 3}
   buildCost: 75
   range: 3
   fireRate: 1.2
-  damage: 25
+  damage: 0
   upgradeTiers:
   - tierName: Bear 2
     cost: 300
@@ -48,6 +56,9 @@ MonoBehaviour:
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
+    repairRateMultiplier: 1
+    repairCostMultiplier: 1
+    repairCapMultiplier: 1
   - tierName: Bear 3
     cost: 900
     rangeMultiplier: 1.1
@@ -59,6 +70,9 @@ MonoBehaviour:
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
+    repairRateMultiplier: 1
+    repairCostMultiplier: 1
+    repairCapMultiplier: 1
   fusionRequiredEssence: {fileID: 0}
   fusionRequiredEssenceAmount: 0
   fusionRequiredEssenceAlt: {fileID: 0}
@@ -73,3 +87,8 @@ MonoBehaviour:
   coneRotationOffset: 0
   slowPercent: 0.25
   effectDuration: 0.5
+  repairAuraEnabled: 0
+  repairPerSecond: 0
+  repairGoldPerHP: 1
+  repairPerAllyCap: 4
+  repairAffectsSelf: 0

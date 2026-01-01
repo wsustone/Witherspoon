@@ -31,6 +31,14 @@ MonoBehaviour:
   towerName: Wolf Cub
   icon: {fileID: 0}
   highlightColor: {r: 0, g: 0, b: 0, a: 1}
+  uiShowRange: 1
+  uiShowFireRate: 1
+  uiShowDamage: 1
+  uiShowSlow: 0
+  uiShowConeAngle: 0
+  uiShowProjectileDetails: 1
+  uiShowKills: 1
+  uiShowRepair: 1
   towerPrefab: {fileID: 3965421486017390489, guid: 2ddf7a823f5d5474e9db8d43bf0205c5, type: 3}
   buildCost: 75
   range: 3
@@ -48,6 +56,9 @@ MonoBehaviour:
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
+    repairRateMultiplier: 1
+    repairCostMultiplier: 1
+    repairCapMultiplier: 1
   - tierName: Wolf Hunter
     cost: 900
     rangeMultiplier: 1.25
@@ -59,6 +70,9 @@ MonoBehaviour:
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
+    repairRateMultiplier: 1
+    repairCostMultiplier: 1
+    repairCapMultiplier: 1
   - tierName: Wolf Master
     cost: 2500
     rangeMultiplier: 1.25
@@ -70,6 +84,9 @@ MonoBehaviour:
     requiredEssenceAmount: 0
     requiredEssenceAlt: {fileID: 0}
     requiredEssenceAltAmount: 0
+    repairRateMultiplier: 1
+    repairCostMultiplier: 1
+    repairCapMultiplier: 1
   fusionRequiredEssence: {fileID: 0}
   fusionRequiredEssenceAmount: 0
   fusionRequiredEssenceAlt: {fileID: 0}
@@ -84,3 +101,8 @@ MonoBehaviour:
   coneRotationOffset: 0
   slowPercent: 0.1
   effectDuration: 0.5
+  repairAuraEnabled: 0
+  repairPerSecond: 0
+  repairGoldPerHP: 1
+  repairPerAllyCap: 4
+  repairAffectsSelf: 0

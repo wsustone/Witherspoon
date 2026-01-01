@@ -15,9 +15,29 @@ MonoBehaviour:
   enemyName: Riftrunner
   portrait: {fileID: 0}
   factionColor: {r: 0.4056604, g: 0.12437701, b: 0.19474976, a: 1}
+  uiShowHealth: 1
+  uiShowMoveSpeed: 1
+  uiShowGoldReward: 1
+  uiShowEssenceDrop: 1
+  uiShowArmor: 1
+  uiShowResistances: 1
+  uiShowSlowResist: 1
+  uiShowTraits: 1
   prefab: {fileID: 3002126579560956931, guid: d55b5376a08a64495b3d1a076f3d1676, type: 3}
   baseHealth: 100
   moveSpeed: 1.5
   goldReward: 10
+  armor: 0
+  dmgTakenMulProjectile: 1
+  dmgTakenMulBeam: 1
+  dmgTakenMulCone: 1
+  dmgTakenMulAura: 1
+  dmgTakenMulWall: 1
+  slowEffectiveness: 0.7
+  specialTraits: 
+  canAttackTowers: 0
+  attackRange: 0.75
+  attackDamage: 10
+  attackInterval: 1.2
   dropEssence: {fileID: 0}
   essenceAmount: 0

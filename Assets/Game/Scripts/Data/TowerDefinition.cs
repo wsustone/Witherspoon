@@ -19,6 +19,9 @@ namespace Witherspoon.Game.Data
             [SerializeField] private int requiredEssenceAmount;
             [SerializeField] private EssenceDefinition requiredEssenceAlt;
             [SerializeField] private int requiredEssenceAltAmount;
+            [SerializeField] private float repairRateMultiplier = 1f;
+            [SerializeField] private float repairCostMultiplier = 1f;
+            [SerializeField] private float repairCapMultiplier = 1f;
 
             public string TierName => tierName;
             public int Cost => cost;
@@ -31,6 +34,9 @@ namespace Witherspoon.Game.Data
             public int RequiredEssenceAmount => requiredEssenceAmount;
             public EssenceDefinition RequiredEssenceAlt => requiredEssenceAlt;
             public int RequiredEssenceAltAmount => requiredEssenceAltAmount;
+            public float RepairRateMultiplier => repairRateMultiplier;
+            public float RepairCostMultiplier => repairCostMultiplier;
+            public float RepairCapMultiplier => repairCapMultiplier;
         }
 
         public enum AttackStyle
@@ -75,6 +81,7 @@ namespace Witherspoon.Game.Data
         [SerializeField] private bool uiShowConeAngle = true;
         [SerializeField] private bool uiShowProjectileDetails = true;
         [SerializeField] private bool uiShowKills = true;
+        [SerializeField] private bool uiShowRepair = true;
 
         [Header("Gameplay")]
         [SerializeField] private GameObject towerPrefab;
@@ -106,6 +113,13 @@ namespace Witherspoon.Game.Data
         [SerializeField] private float slowPercent = 0.1f;
         [SerializeField] private float effectDuration = 0.5f;
 
+        [Header("Repair Aura (Optional)")]
+        [SerializeField] private bool repairAuraEnabled = false;
+        [SerializeField] private float repairPerSecond = 0f;
+        [SerializeField] private float repairGoldPerHP = 1f;
+        [SerializeField] private float repairPerAllyCap = 4f;
+        [SerializeField] private bool repairAffectsSelf = false;
+
         public GuardianArchetype Archetype => archetype;
         public string TowerName => (!overrideTowerName && archetype != null) ? archetype.DisplayName : towerName;
         public Sprite Icon => (!overrideIcon && archetype != null && archetype.Icon != null) ? archetype.Icon : icon;
@@ -133,9 +147,15 @@ namespace Witherspoon.Game.Data
         public bool UiShowConeAngle => uiShowConeAngle;
         public bool UiShowProjectileDetails => uiShowProjectileDetails;
         public bool UiShowKills => uiShowKills;
+        public bool UiShowRepair => uiShowRepair;
         public EssenceDefinition FusionRequiredEssence => fusionRequiredEssence;
         public int FusionRequiredEssenceAmount => fusionRequiredEssenceAmount;
         public EssenceDefinition FusionRequiredEssenceAlt => fusionRequiredEssenceAlt;
         public int FusionRequiredEssenceAltAmount => fusionRequiredEssenceAltAmount;
+        public bool RepairAuraEnabled => repairAuraEnabled;
+        public float RepairPerSecond => repairPerSecond;
+        public float RepairGoldPerHP => repairGoldPerHP;
+        public float RepairPerAllyCap => repairPerAllyCap;
+        public bool RepairAffectsSelf => repairAffectsSelf;
     }
 }

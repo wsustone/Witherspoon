@@ -36,6 +36,8 @@ namespace Witherspoon.Game.Enemies
         private int _pathIndex;
         private bool _pendingPathRefresh;
         private static bool _pathsVisible;
+        private float _towerAttackCooldown;
+        private TowerController _currentTowerTarget;
 
         public System.Action<EnemyAgent> OnReachedGoal;
         public System.Action<EnemyAgent> OnKilled;
@@ -114,7 +116,12 @@ namespace Witherspoon.Game.Enemies
             {
                 RecalculatePath();
             }
-            MoveTowardsGoal();
+            // Attack towers if this creep can and one is in range; pause movement while attacking
+            bool attackingTower = TowerAttackUpdate();
+            if (!attackingTower)
+            {
+                MoveTowardsGoal();
+            }
         }
 
         private void LateUpdate()
@@ -250,6 +257,43 @@ namespace Witherspoon.Game.Enemies
             }
 
             RefreshPathRendererVisibility();
+        }
+
+        private bool TowerAttackUpdate()
+        {
+            if (!definition.CanAttackTowers)
+            {
+                _currentTowerTarget = null;
+                return false;
+            }
+
+            // Acquire nearest tower within attack range
+            float range = Mathf.Max(0f, definition.AttackRange);
+            float rangeSq = range * range;
+            TowerController best = null;
+            float bestDist = float.MaxValue;
+            foreach (var t in TowerController.ActiveTowers)
+            {
+                if (t == null) continue;
+                float d = (t.transform.position - transform.position).sqrMagnitude;
+                if (d <= rangeSq && d < bestDist)
+                {
+                    bestDist = d;
+                    best = t;
+                }
+            }
+
+            _currentTowerTarget = best;
+            if (_currentTowerTarget == null) return false;
+
+            _towerAttackCooldown -= Time.deltaTime;
+            if (_towerAttackCooldown <= 0f)
+            {
+                _currentTowerTarget.ApplyDamageFromEnemy(definition.AttackDamage, this);
+                _towerAttackCooldown = Mathf.Max(0.05f, definition.AttackInterval);
+            }
+
+            return true; // pause movement while attacking
         }
 
         private void AdvancePathIfNeeded(bool forceAdvance = false)

@@ -77,6 +77,8 @@ namespace Witherspoon.Game.UI
                 TryEnterFusionMode();
             }
 
+            // Repair hotkey intentionally disabled until Generals system is introduced
+
             if (Input.GetMouseButtonDown(0))
             {
                 if (_isFusing)

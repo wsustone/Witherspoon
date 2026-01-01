@@ -33,6 +33,9 @@ namespace Witherspoon.Game.UI
         [SerializeField] private TMP_Text upgradeButtonLabel;
         [SerializeField] private TMP_Text upgradeButtonCostLabel;
         [SerializeField] private TMP_Text upgradeStatusLabel;
+        [SerializeField] private Button repairButton;
+        [SerializeField] private TMP_Text repairButtonLabel;
+        [SerializeField] private TMP_Text repairButtonCostLabel;
 
         private readonly StringBuilder _builder = new();
         private TowerController _currentTower;
@@ -57,6 +60,10 @@ namespace Witherspoon.Game.UI
             {
                 upgradeButton.onClick.AddListener(HandleUpgradeClicked);
             }
+            if (repairButton != null)
+            {
+                repairButton.onClick.AddListener(HandleRepairClicked);
+            }
         }
 
         private void OnDisable()
@@ -68,6 +75,10 @@ namespace Witherspoon.Game.UI
             if (upgradeButton != null)
             {
                 upgradeButton.onClick.RemoveListener(HandleUpgradeClicked);
+            }
+            if (repairButton != null)
+            {
+                repairButton.onClick.RemoveListener(HandleRepairClicked);
             }
         }
 
@@ -86,6 +97,7 @@ namespace Witherspoon.Game.UI
             {
                 RefreshTowerStats(_currentTower);
                 RefreshUpgradeUI(_currentTower);
+                RefreshRepairUI(_currentTower);
             }
             else if (_currentEnemy != null)
             {
@@ -119,6 +131,8 @@ namespace Witherspoon.Game.UI
             RefreshTowerStats(tower);
             SetUpgradeVisibility(true);
             RefreshUpgradeUI(tower);
+            SetRepairVisibility(true);
+            RefreshRepairUI(tower);
         }
 
         public void ShowEnemy(EnemyAgent enemy)
@@ -144,6 +158,7 @@ namespace Witherspoon.Game.UI
             _currentTower = null;
             _currentEnemy = null;
             SetUpgradeVisibility(false);
+            SetRepairVisibility(false);
             SetPanelActive(false);
         }
 
@@ -217,6 +232,16 @@ namespace Witherspoon.Game.UI
             upgradeButton = CreateButtonElement("UpgradeButton", overlayGo.transform, overlayAccent, new Color(0.06f, 0.09f, 0.12f, 0.95f));
             upgradeStatusLabel = CreateTextElement("UpgradeStatus", overlayGo.transform, 16, FontStyles.Italic, new Color(1f, 1f, 1f, 0.7f));
             upgradeStatusLabel.enableWordWrapping = true;
+
+            repairButton = CreateButtonElement("RepairButton", overlayGo.transform, new Color(0.3f, 0.85f, 0.5f, 0.95f), new Color(0.04f, 0.07f, 0.12f, 0.95f));
+            var repairCost = repairButton.transform.Find("Content/CostLabel")?.GetComponent<TMP_Text>();
+            var repairAction = repairButton.transform.Find("Content/ActionLabel")?.GetComponent<TMP_Text>();
+            if (repairCost != null) repairButtonCostLabel = repairCost;
+            if (repairAction != null)
+            {
+                repairButtonLabel = repairAction;
+                repairButtonLabel.text = "Repair";
+            }
 
             panelRoot = overlayGo;
         }
@@ -305,6 +330,7 @@ namespace Witherspoon.Game.UI
             if (_currentTower != null)
             {
                 RefreshUpgradeUI(_currentTower);
+                RefreshRepairUI(_currentTower);
             }
         }
 
@@ -362,6 +388,47 @@ namespace Witherspoon.Game.UI
 
             _currentTower.BeginUpgrade();
             RefreshUpgradeUI(_currentTower);
+            RefreshRepairUI(_currentTower);
+        }
+
+        private void HandleRepairClicked()
+        {
+            if (_currentTower == null || economyManager == null) return;
+            if (!_currentTower.CanRepair())
+            {
+                RefreshRepairUI(_currentTower);
+                return;
+            }
+
+            int cost = _currentTower.GetRepairCost();
+            if (!economyManager.TrySpend(cost))
+            {
+                RefreshRepairUI(_currentTower);
+                return;
+            }
+
+            _currentTower.BeginRepair();
+            RefreshUpgradeUI(_currentTower);
+            RefreshRepairUI(_currentTower);
+        }
+
+        public void TryRepairCurrentTower()
+        {
+            if (_currentTower == null || economyManager == null) return;
+            if (!_currentTower.CanRepair())
+            {
+                RefreshRepairUI(_currentTower);
+                return;
+            }
+            int cost = _currentTower.GetRepairCost();
+            if (!economyManager.TrySpend(cost))
+            {
+                RefreshRepairUI(_currentTower);
+                return;
+            }
+            _currentTower.BeginRepair();
+            RefreshUpgradeUI(_currentTower);
+            RefreshRepairUI(_currentTower);
         }
 
         private void RefreshUpgradeUI(TowerController tower)
@@ -471,6 +538,63 @@ namespace Witherspoon.Game.UI
             SetUpgradeTexts(buttonText, statusText, costText);
         }
 
+        private void RefreshRepairUI(TowerController tower)
+        {
+            if (repairButton == null) return;
+            if (tower == null)
+            {
+                repairButton.interactable = false;
+                SetRepairTexts("Repair", "--");
+                return;
+            }
+
+            if (tower.IsUpgrading)
+            {
+                repairButton.interactable = false;
+                if (tower.IsRepairing)
+                {
+                    SetRepairTexts("Repairing...", "--");
+                }
+                else
+                {
+                    SetRepairTexts("Repair", "--");
+                }
+                return;
+            }
+
+            int cost = tower.GetRepairCost();
+            bool canRepair = tower.CanRepair();
+            bool hasGold = economyManager != null && economyManager.CurrentGold >= cost;
+            repairButton.interactable = canRepair && hasGold;
+
+            string costText = canRepair ? $"{cost}g" : "--";
+            SetRepairTexts("Repair", costText);
+        }
+
+        private void SetRepairVisibility(bool visible)
+        {
+            if (repairButton != null)
+            {
+                repairButton.gameObject.SetActive(visible);
+            }
+            if (repairButtonCostLabel != null)
+            {
+                repairButtonCostLabel.gameObject.SetActive(visible);
+            }
+        }
+
+        private void SetRepairTexts(string actionText, string costText)
+        {
+            if (repairButtonLabel != null)
+            {
+                repairButtonLabel.text = actionText;
+            }
+            if (repairButtonCostLabel != null)
+            {
+                repairButtonCostLabel.text = costText;
+            }
+        }
+
         private void SetUpgradeVisibility(bool visible)
         {
             if (upgradeButton != null)
@@ -524,12 +648,17 @@ namespace Witherspoon.Game.UI
             SetText(subtitleLabel, $"{definition.AttackMode} Tower");
 
             _builder.Length = 0;
+            _builder.AppendLine($"Health: {tower.CurrentHealth:0}/{tower.MaxHealth:0}");
             if (definition.UiShowRange) _builder.AppendLine($"Range: {tower.CurrentRange:0.0}");
             if (definition.UiShowFireRate) _builder.AppendLine($"Fire Rate: {tower.CurrentFireRate:0.0}/s");
             if (definition.UiShowDamage) _builder.AppendLine($"Damage: {tower.CurrentDamage:0}");
             if (definition.UiShowSlow && definition.SlowPercent > 0f)
             {
                 _builder.AppendLine($"Slow: {(tower.CurrentSlowPercent * 100f):0}% for {definition.EffectDuration:0.0}s");
+            }
+            if (definition.UiShowRepair && definition.RepairAuraEnabled && tower.HasRepairAura)
+            {
+                _builder.AppendLine($"Repair: {tower.CurrentRepairPerSecond:0.0}/s | Cap: {tower.CurrentRepairPerAllyCap:0.0}/s/tower | Cost: {tower.CurrentRepairGoldPerHP:0.##} g/HP");
             }
             if (definition.AttackMode == Witherspoon.Game.Data.TowerDefinition.AttackStyle.Cone && definition.UiShowConeAngle)
             {
