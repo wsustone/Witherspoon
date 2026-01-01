@@ -48,14 +48,14 @@ namespace Witherspoon.Game.Enemies
         private Transform _spawnOverride;
         private Transform _goalOverride;
 
-        public void SpawnWave(int waveNumber, GridManager grid, WaveSpawnConfig? config = null)
+        public int SpawnWave(int waveNumber, GridManager grid, WaveSpawnConfig? config = null)
         {
             var activeSpawn = GetActiveSpawnAnchor();
             var activeGoal = GetActiveGoalAnchor();
             if (activeSpawn == null || activeGoal == null)
             {
                 Debug.LogWarning("EnemySpawner cannot spawn wave because spawn or goal anchor is missing.");
-                return;
+                return 0;
             }
 
             int count = config?.EnemyCountOverride ?? Mathf.Clamp(3 + waveNumber, 3, 25);
@@ -64,7 +64,7 @@ namespace Witherspoon.Game.Enemies
             if (!IsSpawnable(waveEnemy))
             {
                 Debug.LogWarning($"Wave {waveNumber} could not find a spawnable enemy definition (missing prefab).");
-                return;
+                return 0;
             }
             if (debugWaveSelection && waveEnemy != null)
             {
@@ -72,10 +72,15 @@ namespace Witherspoon.Game.Enemies
             }
             Vector3 startPos = activeSpawn.position;
             Vector3 goalPos = activeGoal.position;
+            int spawned = 0;
             for (int i = 0; i < count; i++)
             {
-                SpawnEnemy(waveEnemy, startPos, goalPos, i * spacing);
+                if (SpawnEnemy(waveEnemy, startPos, goalPos, i * spacing))
+                {
+                    spawned++;
+                }
             }
+            return spawned;
         }
 
         public void SetAnchorOverride(Transform spawnOverride, Transform goalOverride)
@@ -186,14 +191,16 @@ namespace Witherspoon.Game.Enemies
             return null;
         }
 
-        private void SpawnEnemy(EnemyDefinition definition, Vector3 start, Vector3 goal, float delay)
+        private bool SpawnEnemy(EnemyDefinition definition, Vector3 start, Vector3 goal, float delay)
         {
-            if (definition?.Prefab == null) return;
+            if (definition?.Prefab == null) return false;
             var enemy = Instantiate(definition.Prefab, start, Quaternion.identity);
             if (enemy.TryGetComponent(out EnemyAgent agent))
             {
                 agent.Initialize(definition, goal, delay, _attachedGrid);
+                return true;
             }
+            return false;
         }
 
         private GridManager _attachedGrid;

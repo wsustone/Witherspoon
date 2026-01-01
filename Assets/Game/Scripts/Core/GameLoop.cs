@@ -15,12 +15,14 @@ namespace Witherspoon.Game.Core
         [SerializeField] private Map.GridManager gridManager;
 
         [Header("Runtime State")]
-        [SerializeField] private bool autoStart = true;
+        [SerializeField] private bool autoStart = false;
         [Header("Debug Hotkeys")]
         [SerializeField] private KeyCode togglePathKey = KeyCode.BackQuote;
         [SerializeField] private bool pathVisualizationOnStart;
         private bool _initialized;
         private bool _pathVisualizationEnabled;
+
+        public bool Initialized => _initialized;
 
         private void Start()
         {

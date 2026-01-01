@@ -88,10 +88,7 @@ namespace Witherspoon.Game.Towers
 
         private void Start()
         {
-            if (beamRenderer != null)
-            {
-                beamRenderer.enabled = false;
-            }
+            EnsureBeamRendererDefaults();
             if (coneRenderer != null)
             {
                 coneRenderer.enabled = false;
@@ -132,21 +129,6 @@ namespace Witherspoon.Game.Towers
                 audioSource.loop = false;
             }
 
-            // Ensure beam renderer exists for beam-type towers
-            if (definition != null && definition.AttackMode == TowerDefinition.AttackStyle.Beam && beamRenderer == null)
-            {
-                beamRenderer = GetComponent<LineRenderer>();
-                if (beamRenderer == null)
-                {
-                    beamRenderer = gameObject.AddComponent<LineRenderer>();
-                    beamRenderer.useWorldSpace = true;
-                    beamRenderer.widthMultiplier = 0.1f;
-                    beamRenderer.numCapVertices = 2;
-                    beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                }
-                beamRenderer.enabled = false;
-            }
-
             // Ensure cone renderer exists for cone-type towers
             if (definition != null && definition.AttackMode == TowerDefinition.AttackStyle.Cone && coneRenderer == null)
             {
@@ -161,6 +143,43 @@ namespace Witherspoon.Game.Towers
                 }
                 coneRenderer.enabled = false;
             }
+        }
+
+        private void EnsureBeamRendererDefaults()
+        {
+            if (definition == null || definition.AttackMode != TowerDefinition.AttackStyle.Beam)
+            {
+                if (beamRenderer != null)
+                {
+                    beamRenderer.enabled = false;
+                }
+                return;
+            }
+
+            if (beamRenderer == null)
+            {
+                beamRenderer = GetComponent<LineRenderer>();
+            }
+
+            if (beamRenderer == null)
+            {
+                beamRenderer = gameObject.AddComponent<LineRenderer>();
+            }
+
+            beamRenderer.useWorldSpace = true;
+            beamRenderer.loop = false;
+            beamRenderer.widthMultiplier = 0.2f;
+            beamRenderer.numCapVertices = 4;
+            beamRenderer.numCornerVertices = 2;
+            beamRenderer.alignment = LineAlignment.View;
+            beamRenderer.textureMode = LineTextureMode.Stretch;
+            if (beamRenderer.material == null || beamRenderer.material.shader == null)
+            {
+                beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            }
+            beamRenderer.startColor = definition.AttackColor;
+            beamRenderer.endColor = definition.AttackColor;
+            beamRenderer.enabled = false;
         }
 
         private void OnEnable()
@@ -742,31 +761,7 @@ namespace Witherspoon.Game.Towers
             CacheBaseStats();
             RefreshPlaceholderColors();
             
-            // Ensure beam renderer exists for beam-type towers
-            if (definition.AttackMode == TowerDefinition.AttackStyle.Beam)
-            {
-                if (beamRenderer == null)
-                {
-                    beamRenderer = GetComponent<LineRenderer>();
-                }
-                
-                if (beamRenderer == null)
-                {
-                    beamRenderer = gameObject.AddComponent<LineRenderer>();
-                    beamRenderer.useWorldSpace = true;
-                    beamRenderer.widthMultiplier = 0.2f;
-                    beamRenderer.numCapVertices = 4;
-                    beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                }
-                
-                // Ensure the material is set up properly
-                if (beamRenderer.material == null || beamRenderer.material.shader == null)
-                {
-                    beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
-                }
-                
-                beamRenderer.enabled = false;
-            }
+            EnsureBeamRendererDefaults();
 
             // Ensure cone renderer exists for cone-type towers
             if (definition.AttackMode == TowerDefinition.AttackStyle.Cone && coneRenderer == null)
