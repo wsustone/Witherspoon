@@ -18,22 +18,21 @@ namespace Witherspoon.Game.Core
         private int _escapes;
         private float _damageAccum;
         private bool _defeated;
+        private bool _initialized;
 
         public GameModeDefinition Mode => gameMode;
         public int LivesRemaining => _livesRemaining;
         public int Escapes => _escapes;
         public float DamageAccumulated => _damageAccum;
         public bool Defeated => _defeated;
+        public bool IsInitialized => _initialized;
 
         public System.Action<GameSession> OnStatsChanged;
         public System.Action<GameSession, string> OnDefeat;
 
         private void Awake()
         {
-            _livesRemaining = Mathf.Max(0, gameMode != null ? gameMode.StartingLives : 0);
-            _escapes = 0;
-            _damageAccum = 0f;
-            _defeated = false;
+            InitializeState(notifyListeners: false);
         }
 
         private void OnEnable()
@@ -48,7 +47,7 @@ namespace Witherspoon.Game.Core
 
         private void HandleEnemyReachedGoal(EnemyAgent agent)
         {
-            if (_defeated) return;
+            if (_defeated || !_initialized) return;
 
             _escapes++;
             float dmgPer = gameMode != null ? gameMode.DamagePerEscape : 1f;
@@ -101,6 +100,26 @@ namespace Witherspoon.Game.Core
             if (pauseOnDefeat)
             {
                 Time.timeScale = 0f;
+            }
+        }
+
+        public void SetMode(GameModeDefinition mode)
+        {
+            gameMode = mode;
+            InitializeState(notifyListeners: true);
+        }
+
+        private void InitializeState(bool notifyListeners)
+        {
+            var mode = gameMode;
+            _livesRemaining = Mathf.Max(0, mode != null ? mode.StartingLives : 0);
+            _escapes = 0;
+            _damageAccum = 0f;
+            _defeated = false;
+            _initialized = true;
+            if (notifyListeners)
+            {
+                OnStatsChanged?.Invoke(this);
             }
         }
     }

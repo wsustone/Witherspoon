@@ -14,6 +14,8 @@ namespace Witherspoon.Game.Data
     {
         [SerializeField] private string displayName = "No Leaks";
         [SerializeField] private GameModeType type = GameModeType.NoLeaks;
+        [TextArea]
+        [SerializeField] private string description = "Lose instantly if any creep breaches the goal.";
 
         [Header("Constraints")]
         [SerializeField] private bool defeatOnFirstLeak = true;
@@ -24,6 +26,7 @@ namespace Witherspoon.Game.Data
 
         public string DisplayName => displayName;
         public GameModeType Type => type;
+        public string Description => description;
         public bool DefeatOnFirstLeak => defeatOnFirstLeak;
         public int StartingLives => startingLives;
         public int MaxEscapes => maxEscapes;

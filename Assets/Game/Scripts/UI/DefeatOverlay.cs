@@ -232,7 +232,6 @@ namespace Witherspoon.Game.UI
         {
             var tex = new Texture2D(8, 8, TextureFormat.ARGB32, false)
             {
-                alphaIsTransparency = true,
                 filterMode = FilterMode.Point,
                 wrapMode = TextureWrapMode.Clamp
             };
