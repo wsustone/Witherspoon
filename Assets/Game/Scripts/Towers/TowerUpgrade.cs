@@ -99,6 +99,20 @@ namespace Witherspoon.Game.Towers
             _upgradeTimer = tier.UpgradeTime;
         }
 
+        public void StartUpgrade(Core.EconomyManager economy)
+        {
+            if (!CanUpgrade()) return;
+            var tier = NextTier;
+            if (tier == null) return;
+            
+            int cost = tier.Cost;
+            if (economy != null && economy.Gold >= cost)
+            {
+                economy.SpendGold(cost);
+                BeginUpgrade();
+            }
+        }
+
         private void CompleteUpgrade()
         {
             _isUpgrading = false;
@@ -111,6 +125,34 @@ namespace Witherspoon.Game.Towers
             _isMorphing = true;
             _isUpgrading = true;
             _upgradeTimer = Mathf.Max(0f, seconds);
+        }
+
+        public bool CanMorph()
+        {
+            return _controller?.Definition?.MorphTarget != null && !_isUpgrading;
+        }
+
+        public int MorphCost
+        {
+            get
+            {
+                var def = _controller?.Definition;
+                return def?.MorphTarget != null ? def.MorphCost : int.MaxValue;
+            }
+        }
+
+        public void StartMorph(Core.EconomyManager economy)
+        {
+            if (!CanMorph()) return;
+            var def = _controller?.Definition;
+            if (def?.MorphTarget == null) return;
+            
+            int cost = def.MorphCost;
+            if (economy != null && economy.Gold >= cost)
+            {
+                economy.SpendGold(cost);
+                _controller.TransformTo(def.MorphTarget);
+            }
         }
 
         public void ResetUpgrades()
@@ -130,11 +172,19 @@ namespace Witherspoon.Game.Towers
             return _health.CurrentHealth < _health.MaxHealth - 0.01f;
         }
 
+        public int RepairCost
+        {
+            get
+            {
+                if (_health == null) return 0;
+                float missing = Mathf.Max(0f, _health.MaxHealth - _health.CurrentHealth);
+                return Mathf.CeilToInt(missing * Mathf.Max(0f, repairCostPerHP));
+            }
+        }
+
         public int GetRepairCost()
         {
-            if (_health == null) return 0;
-            float missing = Mathf.Max(0f, _health.MaxHealth - _health.CurrentHealth);
-            return Mathf.CeilToInt(missing * Mathf.Max(0f, repairCostPerHP));
+            return RepairCost;
         }
 
         public float GetRepairDuration()
@@ -148,6 +198,18 @@ namespace Witherspoon.Game.Towers
             _isRepairing = true;
             _isUpgrading = true;
             _upgradeTimer = GetRepairDuration();
+        }
+
+        public void StartRepair(Core.EconomyManager economy)
+        {
+            if (!CanRepair()) return;
+            
+            int cost = RepairCost;
+            if (economy != null && economy.Gold >= cost)
+            {
+                economy.SpendGold(cost);
+                BeginRepair();
+            }
         }
 
         private void CompleteRepair()

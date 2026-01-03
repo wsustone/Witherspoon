@@ -72,7 +72,7 @@ namespace Witherspoon.Game.UI
 
             if (canUpgrade)
             {
-                int cost = upgrade.UpgradeCost;
+                int cost = upgrade.GetUpgradeCost();
                 bool affordable = gold >= cost;
                 SetText(buttonLabel, "Upgrade");
                 SetText(costLabel, $"Cost: {cost} gold");
