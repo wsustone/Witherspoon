@@ -25,8 +25,11 @@ namespace Witherspoon.Game.UI
             if (tower == null || tower.Definition == null) return;
 
             var def = tower.Definition;
+            var upgrade = tower.GetComponent<TowerUpgrade>();
+            int tier = upgrade != null ? upgrade.UpgradeTier : 0;
+            
             SetText(titleLabel, def.TowerName);
-            SetText(subtitleLabel, $"Tier {def.Tier}");
+            SetText(subtitleLabel, tier > 0 ? $"Tier {tier}" : "Base");
 
             _builder.Clear();
             var health = tower.GetComponent<TowerHealth>();
@@ -38,7 +41,7 @@ namespace Witherspoon.Game.UI
             _builder.AppendLine($"<b>Damage:</b> {tower.CurrentDamage:0.0}");
             _builder.AppendLine($"<b>Range:</b> {def.Range:0.0}");
             _builder.AppendLine($"<b>Fire Rate:</b> {def.FireRate:0.0}/s");
-            _builder.AppendLine($"<b>Kills:</b> {tower.Kills}");
+            _builder.AppendLine($"<b>Kills:</b> {tower.KillCount}");
 
             SetText(statsLabel, _builder.ToString());
         }
@@ -68,7 +71,7 @@ namespace Witherspoon.Game.UI
 
             bool canUpgrade = upgrade.CanUpgrade();
             bool canMorph = upgrade.CanMorph();
-            int gold = _economyManager != null ? _economyManager.Gold : 0;
+            int gold = _economyManager != null ? _economyManager.CurrentGold : 0;
 
             if (canUpgrade)
             {
@@ -105,7 +108,7 @@ namespace Witherspoon.Game.UI
             if (upgrade == null) return;
 
             bool canRepair = upgrade.CanRepair();
-            int gold = _economyManager != null ? _economyManager.Gold : 0;
+            int gold = _economyManager != null ? _economyManager.CurrentGold : 0;
 
             if (canRepair)
             {

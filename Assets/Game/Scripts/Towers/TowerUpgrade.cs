@@ -106,9 +106,8 @@ namespace Witherspoon.Game.Towers
             if (tier == null) return;
             
             int cost = tier.Cost;
-            if (economy != null && economy.Gold >= cost)
+            if (economy != null && economy.TrySpend(cost))
             {
-                economy.SpendGold(cost);
                 BeginUpgrade();
             }
         }
@@ -129,30 +128,23 @@ namespace Witherspoon.Game.Towers
 
         public bool CanMorph()
         {
-            return _controller?.Definition?.MorphTarget != null && !_isUpgrading;
+            // Morph functionality not currently implemented in TowerDefinition
+            return false;
         }
 
         public int MorphCost
         {
             get
             {
-                var def = _controller?.Definition;
-                return def?.MorphTarget != null ? def.MorphCost : int.MaxValue;
+                // Morph functionality not currently implemented in TowerDefinition
+                return int.MaxValue;
             }
         }
 
         public void StartMorph(Core.EconomyManager economy)
         {
-            if (!CanMorph()) return;
-            var def = _controller?.Definition;
-            if (def?.MorphTarget == null) return;
-            
-            int cost = def.MorphCost;
-            if (economy != null && economy.Gold >= cost)
-            {
-                economy.SpendGold(cost);
-                _controller.TransformTo(def.MorphTarget);
-            }
+            // Morph functionality not currently implemented in TowerDefinition
+            // This method exists for UI compatibility but does nothing
         }
 
         public void ResetUpgrades()
@@ -205,9 +197,8 @@ namespace Witherspoon.Game.Towers
             if (!CanRepair()) return;
             
             int cost = RepairCost;
-            if (economy != null && economy.Gold >= cost)
+            if (economy != null && economy.TrySpend(cost))
             {
-                economy.SpendGold(cost);
                 BeginRepair();
             }
         }
