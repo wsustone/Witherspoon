@@ -42,6 +42,7 @@ Assets/TextMesh\ Pro/Examples\ &\ Extras/
 *.lib
 *.o
 *.obj
+*.bin
 
 # Build artifacts
 *.bundle
@@ -49,6 +50,10 @@ Assets/TextMesh\ Pro/Examples\ &\ Extras/
 *.aab
 *.ipa
 mythic.app/
+*.app/
+
+# Addressables
+Assets/AddressableAssetsData/*/addressables_content_state.bin
 
 # OS metadata
 .DS_Store

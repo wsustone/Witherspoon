@@ -70,15 +70,22 @@ namespace Witherspoon.Game.UI
 
         private void HandleButtonClicked()
         {
+            Debug.Log("[WaveStartButton] Button clicked!");
             if (gameLoop != null && !gameLoop.Initialized)
             {
                 gameLoop.Initialize();
+                Debug.Log("[WaveStartButton] GameLoop initialized");
             }
 
-            waveManager?.RequestStartNextWave();
-
-            // Hide the button after the player starts the run
-            gameObject.SetActive(false);
+            if (waveManager != null)
+            {
+                Debug.Log("[WaveStartButton] Calling RequestStartNextWave");
+                waveManager.RequestStartNextWave();
+            }
+            else
+            {
+                Debug.LogWarning("[WaveStartButton] WaveManager is null!");
+            }
         }
 
         private void UpdateVisualState()
@@ -98,6 +105,13 @@ namespace Witherspoon.Game.UI
             var state = waveManager.State;
             bool enable = state == WaveManager.WaveState.WaitingForInput;
             button.interactable = enable;
+            
+            // Ensure the button GameObject is active when waiting for input
+            if (state == WaveManager.WaveState.WaitingForInput && !gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+                Debug.Log("[WaveStartButton] Re-enabled button for next wave");
+            }
 
             if (label == null) return;
 

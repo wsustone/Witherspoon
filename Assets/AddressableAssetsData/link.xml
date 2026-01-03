@@ -1,0 +1,52 @@
+<linker>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Witherspoon.Game.Data.EnemyDefinition" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.EnemyFamilyLibrary" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.EssenceDefinition" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.FusionRecipe" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.GameModeDefinition" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.GuardianArchetype" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.TowerDefinition" preserve="all" />
+    <type fullname="Witherspoon.Game.Enemies.EnemyAgent" preserve="all" />
+    <type fullname="Witherspoon.Game.Enemies.EnemyMovement" preserve="all" />
+    <type fullname="Witherspoon.Game.Enemies.EnemyVisuals" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.ProjectileBehaviour" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.SlowZone" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.TowerAudio" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.TowerController" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.TowerHealth" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.TowerRepairAura" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.TowerUpgrade" preserve="all" />
+    <type fullname="Witherspoon.Game.Towers.TowerVisuals" preserve="all" />
+    <type fullname="Witherspoon.Game.Data.TowerDefinition/TowerUpgradeTier" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.2D.IK.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.U2D.IK.CullingManager" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AudioSource" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.LineRenderer" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.SpriteRenderer" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.BoxCollider2D" preserve="all" />
+  </assembly>
+</linker>

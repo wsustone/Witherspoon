@@ -94,6 +94,7 @@ namespace Witherspoon.Game.Core
                         if (manualWaveAdvance)
                         {
                             _state = WaveState.WaitingForInput;
+                            Debug.Log($"[WaveManager] Intermission complete. Now waiting for player input to start wave {_currentWave + 1}");
                         }
                         else
                         {
@@ -106,10 +107,16 @@ namespace Witherspoon.Game.Core
 
         public void RequestStartNextWave()
         {
+            Debug.Log($"[WaveManager] RequestStartNextWave called. State: {_state}, Manual: {manualWaveAdvance}, Enemies: {_enemiesAlive}, Timer: {_timer}");
             if (!manualWaveAdvance && _state != WaveState.WaitingForInput) return;
             if (_state == WaveState.WaitingForInput || (manualWaveAdvance && _state == WaveState.Intermission && _enemiesAlive <= 0 && _timer <= 0f))
             {
+                Debug.Log($"[WaveManager] Starting countdown for wave {_currentWave + 1}");
                 BeginCountdown();
+            }
+            else
+            {
+                Debug.Log($"[WaveManager] Cannot start wave yet. Conditions not met.");
             }
         }
 
@@ -138,6 +145,7 @@ namespace Witherspoon.Game.Core
         {
             _state = WaveState.Intermission;
             _timer = Mathf.Max(1.5f, timeBetweenWaves);
+            Debug.Log($"[WaveManager] Wave {_currentWave} complete. Intermission started. Timer: {_timer}s. Manual advance: {manualWaveAdvance}");
         }
 
         private void HandleEnemyRemoved(EnemyAgent agent)
