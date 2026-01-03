@@ -98,20 +98,36 @@ namespace Witherspoon.Game.Towers
                 return;
             }
 
-            if (coneRenderer == null)
+            // Check if cone renderer is already assigned in inspector
+            if (coneRenderer != null)
             {
-                coneRenderer = GetComponent<SpriteRenderer>();
+                coneRenderer.enabled = false;
+                return;
             }
 
-            if (coneRenderer == null)
+            // Try to find existing sprite renderer
+            coneRenderer = GetComponent<SpriteRenderer>();
+            if (coneRenderer != null)
+            {
+                coneRenderer.enabled = false;
+                return;
+            }
+
+            // Only create cone renderer if we have a sprite resource available
+            Sprite coneSprite = Resources.Load<Sprite>("Sprites/cone") ?? Resources.Load<Sprite>("Sprites/Circle");
+            if (coneSprite != null)
             {
                 var coneObj = new GameObject("ConeRenderer");
                 coneObj.transform.SetParent(transform, false);
                 coneRenderer = coneObj.AddComponent<SpriteRenderer>();
-                coneRenderer.sprite = Resources.Load<Sprite>("Sprites/cone") ?? Resources.Load<Sprite>("Sprites/Circle");
+                coneRenderer.sprite = coneSprite;
                 coneRenderer.color = definition.AttackColor;
+                coneRenderer.enabled = false;
             }
-            coneRenderer.enabled = false;
+            else
+            {
+                Debug.LogWarning($"[TowerVisuals] {name}: No cone sprite found in Resources/Sprites/. Cone visual effects will not display. Assign a SpriteRenderer manually or add sprites to Resources folder.");
+            }
         }
 
         private void BuildPlaceholderMesh(TowerDefinition definition)

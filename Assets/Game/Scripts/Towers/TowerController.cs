@@ -192,8 +192,13 @@ namespace Witherspoon.Game.Towers
 
         private System.Collections.IEnumerator FireConeFx(EnemyAgent target)
         {
-            var coneRenderer = _visuals.ConeRenderer;
-            if (coneRenderer == null || target == null) yield break;
+            var coneRenderer = _visuals?.ConeRenderer;
+            if (coneRenderer == null)
+            {
+                Debug.LogWarning($"[TowerController] {name}: ConeRenderer is null, cannot show cone effect");
+                yield break;
+            }
+            if (target == null) yield break;
 
             coneRenderer.color = definition.AttackColor;
             Vector3 origin = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
