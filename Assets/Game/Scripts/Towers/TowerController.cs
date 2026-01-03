@@ -203,7 +203,12 @@ namespace Witherspoon.Game.Towers
             coneRenderer.color = definition.AttackColor;
             Vector3 origin = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
             Vector3 dir = (target.transform.position - origin).normalized;
-            coneRenderer.transform.position = origin;
+            
+            // Position cone slightly above ground to prevent z-fighting
+            Vector3 conePosition = origin;
+            conePosition.z += 0.1f; // Lift slightly above ground plane
+            coneRenderer.transform.position = conePosition;
+            
             Quaternion facing = Quaternion.FromToRotation(Vector3.up, dir);
             coneRenderer.transform.rotation = facing * Quaternion.Euler(0f, 0f, definition.ConeRotationOffset);
             coneRenderer.transform.localScale = new Vector3(definition.ConeAngle, definition.Range, 1f);

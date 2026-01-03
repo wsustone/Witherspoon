@@ -119,9 +119,11 @@ namespace Witherspoon.Game.Towers
             {
                 var coneObj = new GameObject("ConeRenderer");
                 coneObj.transform.SetParent(transform, false);
+                coneObj.transform.localPosition = Vector3.zero;
                 coneRenderer = coneObj.AddComponent<SpriteRenderer>();
                 coneRenderer.sprite = coneSprite;
                 coneRenderer.color = definition.AttackColor;
+                coneRenderer.sortingOrder = 10; // Render above other sprites
                 coneRenderer.enabled = false;
             }
             else
