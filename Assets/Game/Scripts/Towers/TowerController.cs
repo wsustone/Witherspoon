@@ -39,6 +39,8 @@ namespace Witherspoon.Game.Towers
 
         private Coroutine _auraRoutine;
         private float _lastAuraPulseTime;
+        private FX.AuraEffect _auraEffect;
+        private FX.WallEffect _wallEffect;
 
         public TowerDefinition Definition => definition;
         public int KillCount => _kills;
@@ -193,24 +195,40 @@ namespace Witherspoon.Game.Towers
 
         private System.Collections.IEnumerator FireConeFx(EnemyAgent target)
         {
-            var coneRenderer = _visuals?.ConeRenderer;
-            if (coneRenderer == null || target == null) yield break;
+            if (target == null) yield break;
 
-            coneRenderer.color = new Color(definition.AttackColor.r, definition.AttackColor.g, definition.AttackColor.b, 0.4f);
+            // Load cone effect prefab from Resources
+            GameObject conePrefab = Resources.Load<GameObject>("Prefabs/FX/ConeEffect");
+            if (conePrefab == null)
+            {
+                Debug.LogWarning($"[TowerController] {name}: ConeEffect prefab not found in Resources/Prefabs/FX/");
+                yield break;
+            }
+
             Vector3 origin = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
-            Vector3 dir = (target.transform.position - origin).normalized;
+            Vector3 direction = (target.transform.position - origin).normalized;
             
-            coneRenderer.transform.position = new Vector3(origin.x, origin.y, origin.z + 0.1f);
-            coneRenderer.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir) * Quaternion.Euler(0f, 0f, definition.ConeRotationOffset);
+            // Position cone halfway between tower and max range so it extends from tower outward
+            Vector3 conePosition = origin + direction * (definition.Range * 0.5f);
             
-            // Fix scale: use reasonable values instead of raw definition values
-            float visualRange = Mathf.Min(definition.Range, 3f); // Cap visual range
-            float visualAngle = Mathf.Min(definition.ConeAngle * 0.1f, 1.5f); // Scale down angle
-            coneRenderer.transform.localScale = new Vector3(visualAngle, visualRange, 1f);
+            GameObject coneObj = Instantiate(conePrefab, conePosition, Quaternion.identity);
+            FX.ConeEffect cone = coneObj.GetComponent<FX.ConeEffect>();
             
-            coneRenderer.enabled = true;
+            if (cone != null)
+            {
+                cone.SetDirection(direction);
+                cone.SetSize(definition.ConeAngle, definition.Range);
+                cone.SetColor(definition.AttackColor);
+                cone.Show();
+            }
+            
             yield return new WaitForSeconds(_visuals.FxDuration);
-            coneRenderer.enabled = false;
+            
+            if (cone != null)
+            {
+                cone.Hide();
+            }
+            Destroy(coneObj, 0.5f);
         }
 
         private System.Collections.IEnumerator AuraPulseRoutine()
@@ -231,10 +249,6 @@ namespace Witherspoon.Game.Towers
                 ApplyAuraSlow();
 
                 yield return new WaitForSeconds(pulseDuration);
-                if (_visuals.ConeRenderer != null)
-                {
-                    _visuals.ConeRenderer.enabled = false;
-                }
             }
 
             _auraRoutine = null;
@@ -242,15 +256,24 @@ namespace Witherspoon.Game.Towers
 
         private void PulseAuraFx()
         {
-            var coneRenderer = _visuals.ConeRenderer;
-            if (coneRenderer == null) return;
-
-            Vector3 origin = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
-            coneRenderer.color = definition.AttackColor;
-            coneRenderer.transform.position = origin;
-            coneRenderer.transform.rotation = Quaternion.identity;
-            coneRenderer.transform.localScale = Vector3.one * (definition.Range * 2f);
-            coneRenderer.enabled = true;
+            if (_auraEffect == null)
+            {
+                GameObject auraPrefab = Resources.Load<GameObject>("Prefabs/FX/AuraEffect");
+                if (auraPrefab == null)
+                {
+                    Debug.LogWarning($"[TowerController] {name}: AuraEffect prefab not found in Resources/Prefabs/FX/");
+                    return;
+                }
+                
+                Vector3 origin = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
+                GameObject auraObj = Instantiate(auraPrefab, origin, Quaternion.identity, transform);
+                _auraEffect = auraObj.GetComponent<FX.AuraEffect>();
+            }
+            
+            if (_auraEffect != null)
+            {
+                _auraEffect.Pulse(definition.Range, definition.AttackColor, 0.5f);
+            }
         }
 
         private void ApplyAuraSlow()
@@ -362,16 +385,9 @@ namespace Witherspoon.Game.Towers
 
         private void OnDrawGizmosSelected()
         {
-            if (_visuals?.ConeRenderer == null)
-            {
-                Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
-                Vector3 origin = _visuals?.FirePoint != null ? _visuals.FirePoint.position : transform.position;
-                Gizmos.DrawWireSphere(origin, _currentRange);
-                return;
-            }
-
             Gizmos.color = new Color(0.4f, 0.8f, 1f, 0.35f);
-            Gizmos.DrawWireSphere(_visuals.ConeRenderer.transform.position, _currentRange);
+            Vector3 origin = _visuals?.FirePoint != null ? _visuals.FirePoint.position : transform.position;
+            Gizmos.DrawWireSphere(origin, _currentRange);
         }
 
         // Public API for upgrades
