@@ -71,6 +71,7 @@ namespace Witherspoon.Game.Towers
         {
             _visuals?.Initialize(definition);
             CacheBaseStats();
+            Debug.Log($"[TowerController] {name} initialized with AttackMode {definition.AttackMode}");
         }
 
         private void OnEnable()
@@ -193,25 +194,20 @@ namespace Witherspoon.Game.Towers
         private System.Collections.IEnumerator FireConeFx(EnemyAgent target)
         {
             var coneRenderer = _visuals?.ConeRenderer;
-            if (coneRenderer == null)
-            {
-                Debug.LogWarning($"[TowerController] {name}: ConeRenderer is null, cannot show cone effect");
-                yield break;
-            }
-            if (target == null) yield break;
+            if (coneRenderer == null || target == null) yield break;
 
-            coneRenderer.color = definition.AttackColor;
+            coneRenderer.color = new Color(definition.AttackColor.r, definition.AttackColor.g, definition.AttackColor.b, 0.4f);
             Vector3 origin = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
             Vector3 dir = (target.transform.position - origin).normalized;
             
-            // Position cone slightly above ground to prevent z-fighting
-            Vector3 conePosition = origin;
-            conePosition.z += 0.1f; // Lift slightly above ground plane
-            coneRenderer.transform.position = conePosition;
+            coneRenderer.transform.position = new Vector3(origin.x, origin.y, origin.z + 0.1f);
+            coneRenderer.transform.rotation = Quaternion.FromToRotation(Vector3.up, dir) * Quaternion.Euler(0f, 0f, definition.ConeRotationOffset);
             
-            Quaternion facing = Quaternion.FromToRotation(Vector3.up, dir);
-            coneRenderer.transform.rotation = facing * Quaternion.Euler(0f, 0f, definition.ConeRotationOffset);
-            coneRenderer.transform.localScale = new Vector3(definition.ConeAngle, definition.Range, 1f);
+            // Fix scale: use reasonable values instead of raw definition values
+            float visualRange = Mathf.Min(definition.Range, 3f); // Cap visual range
+            float visualAngle = Mathf.Min(definition.ConeAngle * 0.1f, 1.5f); // Scale down angle
+            coneRenderer.transform.localScale = new Vector3(visualAngle, visualRange, 1f);
+            
             coneRenderer.enabled = true;
             yield return new WaitForSeconds(_visuals.FxDuration);
             coneRenderer.enabled = false;

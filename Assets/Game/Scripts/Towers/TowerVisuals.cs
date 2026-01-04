@@ -37,10 +37,13 @@ namespace Witherspoon.Game.Towers
             if (usePlaceholderMesh)
             {
                 BuildPlaceholderMesh(definition);
+                Debug.Log($"[TowerVisuals] {name}: Built placeholder mesh. Children: {transform.childCount}");
             }
 
             EnsureBeamRendererDefaults(definition);
             EnsureConeRendererDefaults(definition);
+            
+            Debug.Log($"[TowerVisuals] {name}: Initialized. Final children: {transform.childCount}, ConeRenderer: {(coneRenderer != null ? "exists" : "null")}");
         }
 
         public void RefreshForDefinition(TowerDefinition definition)
@@ -78,9 +81,10 @@ namespace Witherspoon.Game.Towers
             beamRenderer.numCornerVertices = 2;
             beamRenderer.alignment = LineAlignment.View;
             beamRenderer.textureMode = LineTextureMode.Stretch;
-            if (beamRenderer.material == null || beamRenderer.material.shader == null)
+            var material = beamRenderer.sharedMaterial;
+            if (material == null || material.shader == null)
             {
-                beamRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                beamRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
             }
             beamRenderer.startColor = definition.AttackColor;
             beamRenderer.endColor = definition.AttackColor;
@@ -105,39 +109,48 @@ namespace Witherspoon.Game.Towers
                 return;
             }
 
-            // Try to find existing sprite renderer
-            coneRenderer = GetComponent<SpriteRenderer>();
-            if (coneRenderer != null)
-            {
-                coneRenderer.enabled = false;
-                return;
-            }
-
-            // Only create cone renderer if we have a sprite resource available
+            // Create a separate child GameObject for cone effect (like beam renderer)
+            // This is similar to how LineRenderer works - separate component for the effect
+            var coneObj = new GameObject("ConeEffect");
+            coneObj.transform.SetParent(transform, false);
+            coneObj.transform.localPosition = Vector3.zero;
+            coneRenderer = coneObj.AddComponent<SpriteRenderer>();
+            
+            // Try to load cone sprite from Resources
             Sprite coneSprite = Resources.Load<Sprite>("Sprites/cone") ?? Resources.Load<Sprite>("Sprites/Circle");
             if (coneSprite != null)
             {
-                var coneObj = new GameObject("ConeRenderer");
-                coneObj.transform.SetParent(transform, false);
-                coneObj.transform.localPosition = Vector3.zero;
-                coneRenderer = coneObj.AddComponent<SpriteRenderer>();
                 coneRenderer.sprite = coneSprite;
-                coneRenderer.color = definition.AttackColor;
-                coneRenderer.sortingOrder = 10; // Render above other sprites
-                coneRenderer.enabled = false;
             }
             else
             {
-                Debug.LogWarning($"[TowerVisuals] {name}: No cone sprite found in Resources/Sprites/. Cone visual effects will not display. Assign a SpriteRenderer manually or add sprites to Resources folder.");
+                Debug.LogWarning($"[TowerVisuals] {name}: No cone sprite in Resources/Sprites/. Assign sprite manually in Inspector to ConeEffect GameObject's SpriteRenderer.");
             }
+            
+            coneRenderer.color = definition.AttackColor;
+            coneRenderer.sortingOrder = 10; // Render above other sprites
+            coneRenderer.enabled = false;
         }
 
         private void BuildPlaceholderMesh(TowerDefinition definition)
         {
-            DisableSpriteRenderers();
-
+            // If a custom mesh already exists on the prefab, don't build the placeholder
             var existingMesh = GetComponentInChildren<MeshRenderer>();
-            if (existingMesh != null) return;
+            if (existingMesh != null)
+            {
+                Debug.Log($"[TowerVisuals] {name}: Found existing mesh, skipping placeholder creation");
+                return;
+            }
+
+            // If the prefab uses 2D sprites for visuals, also skip placeholder generation
+            var existingSprite = GetComponentInChildren<SpriteRenderer>();
+            if (existingSprite != null)
+            {
+                Debug.Log($"[TowerVisuals] {name}: Found existing sprite visuals, skipping placeholder creation");
+                return;
+            }
+
+            DisableSpriteRenderers();
 
             Color color = definition != null ? definition.HighlightColor : new Color(0.2f, 0.9f, 1f, 0.7f);
             Color glowColor = definition != null ? definition.AttackColor : new Color(1f, 0.85f, 0.35f);

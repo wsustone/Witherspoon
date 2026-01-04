@@ -23,7 +23,7 @@ MonoBehaviour:
   overrideProjectileSpeed: 0
   overrideHitsInstantly: 0
   overrideProjectileSpawnOffset: 0
-  overrideAttackMode: 0
+  overrideAttackMode: 1
   overrideConeAngle: 0
   overrideConeRotationOffset: 0
   overrideSlowPercent: 0
