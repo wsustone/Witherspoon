@@ -79,11 +79,11 @@ LineRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 1000
   m_MaskInteraction: 0
   m_Positions:
   - {x: 6.5, y: 0.5, z: 0}
-  - {x: 7.515737, y: 1.7184182, z: 0}
+  - {x: 7.735121, y: 0.2648787, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.2
@@ -92,7 +92,16 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0.7660904
-        value: 1
+        value: 5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -132,9 +141,9 @@ LineRenderer:
       m_ColorSpace: 0
       m_NumColorKeys: 3
       m_NumAlphaKeys: 2
-    numCornerVertices: 2
-    numCapVertices: 4
-    alignment: 0
+    numCornerVertices: 5
+    numCapVertices: 5
+    alignment: 1
     textureMode: 0
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5

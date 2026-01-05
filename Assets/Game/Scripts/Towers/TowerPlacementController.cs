@@ -203,6 +203,13 @@ namespace Witherspoon.Game.Towers
                 }
             }
 
+            // Fallback for 3D-prefab towers: use definition icon so placement preview still works
+            if (visual.Sprite == null && definition.Icon != null)
+            {
+                visual.Sprite = definition.Icon;
+                visual.Scale = Vector3.one * 1.2f;
+            }
+
             _previewCache[definition] = visual;
             return visual;
         }

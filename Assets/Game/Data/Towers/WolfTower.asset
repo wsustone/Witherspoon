@@ -29,7 +29,7 @@ MonoBehaviour:
   overrideSlowPercent: 0
   overrideEffectDuration: 0
   towerName: Wolf Cub
-  icon: {fileID: 0}
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   highlightColor: {r: 0, g: 0, b: 0, a: 1}
   uiShowRange: 1
   uiShowFireRate: 1
