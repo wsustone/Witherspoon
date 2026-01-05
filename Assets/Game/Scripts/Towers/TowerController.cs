@@ -181,15 +181,27 @@ namespace Witherspoon.Game.Towers
         private System.Collections.IEnumerator FireBeamFx(EnemyAgent target)
         {
             var beamRenderer = _visuals.BeamRenderer;
-            if (beamRenderer == null) yield break;
+            if (beamRenderer == null)
+            {
+                Debug.LogWarning($"[TowerController] {name}: BeamRenderer is null!");
+                yield break;
+            }
 
+            Vector3 startPos = _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position;
+            Vector3 endPos = target != null ? target.transform.position : startPos;
+            
+            startPos.z = 0f;
+            endPos.z = 0f;
+            
             beamRenderer.startColor = definition.AttackColor;
             beamRenderer.endColor = definition.AttackColor;
             beamRenderer.positionCount = 2;
-            beamRenderer.SetPosition(0, _visuals.FirePoint != null ? _visuals.FirePoint.position : transform.position);
-            beamRenderer.SetPosition(1, target != null ? target.transform.position : beamRenderer.GetPosition(0));
+            beamRenderer.SetPosition(0, startPos);
+            beamRenderer.SetPosition(1, endPos);
             beamRenderer.enabled = true;
+            
             yield return new WaitForSeconds(_visuals.FxDuration);
+            
             beamRenderer.enabled = false;
         }
 

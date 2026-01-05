@@ -59,19 +59,27 @@ namespace Witherspoon.Game.Towers
 
             beamRenderer.useWorldSpace = true;
             beamRenderer.loop = false;
-            beamRenderer.widthMultiplier = 0.2f;
-            beamRenderer.numCapVertices = 4;
-            beamRenderer.numCornerVertices = 2;
-            beamRenderer.alignment = LineAlignment.View;
+            beamRenderer.startWidth = 1.0f;  // Much wider for visibility
+            beamRenderer.endWidth = 1.0f;
+            beamRenderer.numCapVertices = 5;
+            beamRenderer.numCornerVertices = 5;
+            beamRenderer.alignment = LineAlignment.TransformZ;  // Try different alignment
             beamRenderer.textureMode = LineTextureMode.Stretch;
-            var material = beamRenderer.sharedMaterial;
-            if (material == null || material.shader == null)
-            {
-                beamRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
-            }
-            beamRenderer.startColor = definition.AttackColor;
-            beamRenderer.endColor = definition.AttackColor;
+            beamRenderer.sortingLayerName = "Default";
+            beamRenderer.sortingOrder = 1000; // Very high sorting order
+            
+            // Try Sprites/Default shader which works for other 2D elements
+            Material beamMaterial = new Material(Shader.Find("Sprites/Default"));
+            beamMaterial.color = definition.AttackColor;
+            beamRenderer.sharedMaterial = beamMaterial;
+            
+            // Set very bright color
+            Color brightColor = definition.AttackColor;
+            brightColor.a = 1f;
+            beamRenderer.startColor = brightColor;
+            beamRenderer.endColor = brightColor;
             beamRenderer.enabled = false;
+            
         }
 
     }
