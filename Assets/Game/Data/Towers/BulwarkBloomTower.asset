@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Witherspoon.Game.Data.TowerDefinition
   archetype: {fileID: 11400000, guid: 834c1cb73c98c46e6a9f9aa6cbb04ac2, type: 2}
   overrideTowerName: 0
-  overrideIcon: 0
+  overrideIcon: 1
   overrideHighlightColor: 0
   overrideAttackColor: 0
   overrideRange: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
   uiShowProjectileDetails: 1
   uiShowKills: 1
   uiShowRepair: 1
-  towerPrefab: {fileID: 0}
+  towerPrefab: {fileID: 3965421486017390489, guid: c21b080a589974eddb3fdcfd602d8cf8, type: 3}
   buildCost: 75
   range: 3
   fireRate: 1.2
